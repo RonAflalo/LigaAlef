@@ -1,0 +1,20 @@
+    <div className="pz__header-content">
+      <h1 className="gradient__text">Welcome Home!</h1>
+
+
+      <div className="pz__header-content__input">
+        <p>Check out What's The Next Game Scheduled</p>
+      </div>
+      <div className="pz__header-content__input2">
+        <button type="button">Take Me Away</button>
+      </div>
+
+      <div className="pz__header-content__people">
+        <img src={people} alt='people'/>
+        <p>1,600 people signed up for match in last 24 hours</p>
+      </div>
+    </div>
+    <div className='pz__header-content'></div>
+    <div className="pz__header-image">
+      <img src={banner} alt="symbol"/>
+    </div>

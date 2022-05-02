@@ -1,0 +1,114 @@
+.pz__about {
+    display: flex;
+	justify-content: center;
+	margin-top: 3rem;
+	margin-bottom: 2rem;
+}
+
+.pz__about table {
+	text-align:center;
+	flex-direction: row;
+	width: 75%;
+}
+
+.pz__about-spacer {
+    line-height: 175px;
+}
+
+.pz__about-spacer p{
+	color: rgba(255,255,255,0.15);
+}
+
+.pz__about img{
+	width: 542px;
+	height: 616px;
+}
+
+.rotate-box-1, .rotate-box-2 {
+	display: inline-block;
+	margin: 30px 0;
+	-webkit-transition: all 0.2s ease-in-out;
+	-moz-transition: all 0.2s ease-in-out;
+	-o-transition: all 0.2s ease-in-out;
+	-ms-transition: all 0.2s ease-in-out;
+	transition: all 0.2s ease-in-out;
+}
+a.rotate-box-1, a.rotate-box-2 {
+	text-decoration: none;
+	color: #363940;
+}
+a.rotate-box-1:hover, a.rotate-box-2:hover {
+	color: #676D75;
+}
+.rotate-box-1 .rotate-box-icon {
+	display: inline-block;
+	text-align: center;
+	margin-bottom: 15px;
+	margin-right: 25px;
+	margin-top: 10px;
+	-webkit-transition: all 0.2s ease-in-out;
+	-moz-transition: all 0.2s ease-in-out;
+	-o-transition: all 0.2s ease-in-out;
+	-ms-transition: all 0.2s ease-in-out;
+	transition: all 0.2s ease-in-out;
+}
+.rotate-box-1.square-icon .rotate-box-icon, .rotate-box-2.square-icon .rotate-box-icon {
+	width: 45px;
+	height: 45px;
+	line-height: 45px;
+	color: rgb(61, 61, 61) !important;
+	font-size: 18px;
+	-webkit-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-o-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+.rotate-box-1.square-icon .rotate-box-icon:after, .rotate-box-2.square-icon .rotate-box-icon:after {
+	content: "";
+	position: absolute;
+	top: 3px;
+	right: 3px;
+	bottom: 3px;
+	left: 3px;
+	border: 2px solid rgb(61, 61, 61) !important;
+}
+.rotate-box-1:hover.square-icon .rotate-box-icon , .rotate-box-2:hover.square-icon .rotate-box-icon{
+	-webkit-transform: rotate(0deg);
+	-moz-transform: rotate(0deg);
+	-o-transform: rotate(0deg);
+	transform: rotate(0deg);
+}
+.rotate-box-1.square-icon .rotate-box-icon .fa, .rotate-box-2.square-icon .rotate-box-icon .fa{
+	-webkit-transition: all 0.2s ease-in-out;
+	-moz-transition: all 0.2s ease-in-out;
+	-o-transition: all 0.2s ease-in-out;
+	-ms-transition: all 0.2s ease-in-out;
+	transition: all 0.2s ease-in-out;
+	-webkit-transform: rotate(-45deg);
+	-moz-transform: rotate(-45deg);
+	-o-transform: rotate(-45deg);
+	transform: rotate(-45deg);
+}
+.rotate-box-1:hover.square-icon .rotate-box-icon .fa, .rotate-box-2:hover.square-icon .rotate-box-icon .fa{
+	-webkit-transform: rotate(0deg);
+	-moz-transform: rotate(0deg);
+	-o-transform: rotate(0deg);
+	transform: rotate(0deg);
+}
+
+.rotate-box-1 .rotate-box-info a, .rotate-box-2 .rotate-box-info a {
+	-webkit-transition: all 0.2s ease-in-out;
+	-moz-transition: all 0.2s ease-in-out;
+	-o-transition: all 0.2s ease-in-out;
+	-ms-transition: all 0.2s ease-in-out;
+	transition: all 0.2s ease-in-out;
+}
+.rotate-box-1 h4, .rotate-box-2 h4 {
+	font-weight: 400;
+}
+.rotate-box-1 p {
+	padding: 0 10px;
+}
+.rotate-box-1 .rotate-box-info {
+	padding-left: 60px;
+}

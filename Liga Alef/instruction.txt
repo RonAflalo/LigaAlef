@@ -1,0 +1,26 @@
+//create new folder LigaAlef
+//Drop it on VSC
+
+**terminal
+npx create-react-app liga-alef
+
+++this is a test, see if template site runnig OK
+npm start
+
+ctrl+c
+y
+
+//close VSC
+
+//copy all Files&Folder into liga-alef folder (replace everything that clash)
+
+//open VSC
+
+**terminal
+npm install react-router-dom
+npm install --save firebase
+npm install react-bootstrap bootstrap
+npm install --save react-icons
+npm install @material-ui/core (if cause problem: npm i @material-ui/core --legacy-peer-deps)
+npm install --save react-helmet
+npm install jquery

@@ -1,0 +1,20 @@
+.pz__brand {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+
+    margin-top: 12rem;
+}
+
+.pz__brand div {
+    flex: 1;
+    margin: 1rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.pz__brand p {
+color: white;
+}

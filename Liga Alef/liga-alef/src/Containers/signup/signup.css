@@ -1,0 +1,217 @@
+.pz__signup {
+    display: flex;
+    flex-direction: row;
+}
+
+.pz__signup-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+
+    margin-right: 5rem;
+}
+
+.pz__signup-content h1 {
+    font-family: var(--font-family);
+    font-weight: 800;
+    font-size: 62px;
+    line-height: 75px;
+    letter-spacing: -0.04em;
+}
+
+.pz__signup-content p {
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 28px;
+    color: white;
+
+    margin-top: 1.5rem;
+}
+
+pz__login-content-notice{
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 28px;
+    color: white;
+
+    margin-top: 1.5rem;
+}
+
+.pz__signup-content__input {
+    width: 100%;
+    margin: 2rem 0 1rem;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.pz__signup-content__input input {
+    flex: 2;
+    width: 100%;
+    min-height: 50px;
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 28px;
+    background: var(--color-text);
+    border: 2px solid var(--color-text);
+    padding: 0 1rem;
+    outline: none;
+    color: #fff;
+
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.pz__signup-content__input button {
+    flex: 0.6;
+    width: 100%;
+    min-height: 50px;
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 28px;
+    background:grey;
+    border: 2px solid gray;
+    padding: 0 1rem;
+    color: #fff;
+    cursor: pointer;
+    outline: none;
+
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.pz__signup-content__people {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: row;
+
+    margin-top: 2rem;
+}
+
+.pz__signup-content__people img {
+    width: 181.79px;
+    height: 38px;
+}
+
+.pz__signup-content__people p {
+    margin: 0 0 0 1rem;
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 38px;
+    color: #fff;
+    text-align: center;
+}
+
+.pz__signup-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pz__signup-image img {
+    width: 100%;
+    height: 100%;
+}
+
+@media screen and (max-width: 1050px) {
+    .pz__signup {
+        flex-direction: column;
+    }
+
+    .pz__signup-content {
+        margin: 0 0 3rem;
+    }
+}
+
+@media screen and (max-width: 650px) {
+    .pz__signup-content h1 {
+        font-size: 48px;
+        line-height: 60px;
+    }
+
+    .pz__signup-content p {
+        font-size: 16px;
+        line-height: 24px;
+    }
+    
+    .pz__signup-content__people {
+        flex-direction: column;
+    }
+
+    .pz__signup-content__people p {
+        margin: 0;
+    }
+
+    .pz__signup-content__input input,
+    .pz__signup-content__input button {
+        font-size: 16px;
+        line-height: 24px;
+    }
+}
+
+@media screen and (max-width: 490px) {
+    .pz__signup-content h1 {
+        font-size: 36px;
+        line-height: 48px;
+    }
+
+    .pz__signup-content p {
+        font-size: 14px;
+        line-height: 24px;
+    }
+
+    .pz__signup-content__input input,
+    .pz__signup-content__input button {
+        font-size: 12px;
+        line-height: 16px;
+    }
+}
+
+.pz__signup-right{
+    text-align: center;
+    color: #fff;
+    margin-top: 4%;
+}
+.pz__signup-right input{
+    border: none;
+    border-radius: 1.5rem;
+    padding: 2%;
+    width: 60%;
+    background: #f8f9fa;
+    font-weight: bold;
+    color: #383d41;
+    margin-top: 30%;
+    margin-bottom: 3%;
+    cursor: pointer;
+}
+
+.pz__signup-right img{
+    margin-top: 15%;
+    margin-bottom: 5%;
+    width: 50%;
+    -webkit-animation: mover 2s infinite  alternate;
+    animation: mover 1s infinite  alternate;
+}
+@-webkit-keyframes mover {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-20px); }
+}
+@keyframes mover {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-20px); }
+}
+.pz__signup-right p{
+    font-weight: lighter;
+    padding: 12%;
+    margin-top: -9%;
+}

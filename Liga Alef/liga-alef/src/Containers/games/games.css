@@ -1,0 +1,21 @@
+.pz__games {
+    display: flex;
+    flex-direction: row;
+	justify-content: center;
+}
+
+.pz__games div{
+    display: flex;
+    flex-direction: row;
+	justify-content: center;
+}
+
+.pz__games p {
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 28px;
+    color: white;
+
+    margin-top: 15rem;
+}
