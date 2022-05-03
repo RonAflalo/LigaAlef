@@ -22,10 +22,16 @@ export function getUserId()
   return auth.currentUser.uid;
 }
 
+export function getUserEmail()
+{
+  return auth.currentUser.email;
+}
+
 export function setUserName(userName)
 {
   return auth.currentUser.updateProfile({displayName:userName})
 }
+
 
 
 

@@ -35,14 +35,16 @@ export default function Signup() {
     setLoading(false)
   }
 
-  function addMember(name) {
-
-    db.collection("Community").add({
+  function addMember(name, email) {
+    
+    
+   /* db.collection("Community").add({
       PlayerID: "555",
       Name: "Moshe",
       Grade: "2.5",
-    })
+    })*/
     alert("Hello");
+    return
   }
 
   return (

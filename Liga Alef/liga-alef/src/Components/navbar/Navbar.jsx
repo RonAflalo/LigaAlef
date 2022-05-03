@@ -12,6 +12,7 @@ const Menu = () => (
           <p><Link to='/about'>About Us</Link></p>
           <p><Link to='/search'>Game Search</Link></p>
           <p><Link to='/games'>My Games</Link></p>
+          <p><Link to=' /communities'>Communities</Link></p>
   </>
 )
 
