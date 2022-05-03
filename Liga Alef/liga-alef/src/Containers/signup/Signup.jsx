@@ -35,18 +35,6 @@ export default function Signup() {
     setLoading(false)
   }
 
-  function addMember(name, email) {
-    
-    
-   /* db.collection("Community").add({
-      PlayerID: "555",
-      Name: "Moshe",
-      Grade: "2.5",
-    })*/
-    alert("Hello");
-    return
-  }
-
   return (
     <>
       <Card className="w-25">
