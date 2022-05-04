@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUserId } from "../../Context/AuthContext";
+import { getUserId, getUserName } from "../../Context/AuthContext";
 import db from "../games/firebaseStorage";
 import './communities.css'
+import Fetch from "./fetch";
 
 const Communities = () =>{
     const [comm, setComm] = useState ({name: "", type: "", maxmember: ""});
@@ -27,7 +28,7 @@ const Communities = () =>{
           MaxMember: comm.maxmember,
           Members: [],
           ActiveGames: [],
-          AdminID: getUserId()}
+          AdminID: {Id: getUserId(), Name: getUserName()}}
           ).then(() => {
           navigate('/');
         }).catch((err) =>{
@@ -43,7 +44,7 @@ const Communities = () =>{
         <h4>List - Admin zone + Members + ???</h4>
 
         <h1>Community Search</h1>
-        <h1>List</h1>
+        <Fetch />
 
         <h1>Create Community</h1>
         <form onSubmit={addDocument}>   

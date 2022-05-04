@@ -10,19 +10,18 @@ const Continue = () => {
   const addDocument = (event) => {
     event.preventDefault();
 
-    var ref = db.collection("Users").doc();
+    var ref = db.collection("Users").doc(getUserId());
     ref.set({
-      User_ID: ref.id,
       Name: getUserName(),
       Email: getUserEmail(),
       Grades: { Soccer: '2.5',
                 Basketball: '2.5',
                 Vollyball: '2.5'},
       Communities: [],
-      AuthID: getUserId()}
+      User_ID: getUserId()}
       ).then(() => {
-      var newDocRef= db.collection("Users").doc();
       navigate('/');
+      window.location.reload();
     }).catch((err) =>{
       console.log("Error " + err.message);
     })
