@@ -1,5 +1,5 @@
-import React, {useState, useEffect, useContext} from "react";
-import db from "../search/firebaseStorage";
+import React from "react";
+import db from "../games/firebaseStorage";
 import { getUserName, getUserId, getUserEmail } from "../../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import './signup.css';

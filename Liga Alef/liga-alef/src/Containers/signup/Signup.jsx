@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react"
 import { Form, Button, Card, Alert } from "react-bootstrap"
 import { useAuth, setUserName} from "../../Context/AuthContext"
 import { Link, useNavigate } from "react-router-dom"
-import db from "../search/firebaseStorage"
+import db from "../games/firebaseStorage"
 
 export default function Signup() {
   const emailRef = useRef()
@@ -27,7 +27,7 @@ export default function Signup() {
       await signup(emailRef.current.value, passwordRef.current.value)
       setUserName(userName.current.value);
       navigate('/continue');
-      window.location.reload();
+      //window.location.reload();
     } catch {
       setError("Failed to create an account")
     }
