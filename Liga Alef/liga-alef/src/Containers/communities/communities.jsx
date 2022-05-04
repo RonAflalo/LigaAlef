@@ -4,6 +4,8 @@ import { getUserId, getUserName } from "../../Context/AuthContext";
 import db from "../games/firebaseStorage";
 import './communities.css'
 import Fetch from "./fetch";
+import firebase from 'firebase/compat/app';
+
 
 const Communities = () =>{
     const [comm, setComm] = useState ({name: "", type: "", maxmember: ""});
@@ -30,6 +32,11 @@ const Communities = () =>{
           ActiveGames: [],
           AdminID: {Id: getUserId(), Name: getUserName()}}
           ).then(() => {
+            ref.update({Members: firebase.firestore.FieldValue.arrayUnion(getUserId())});
+            //var creator = db.collection('Users').where(FieldPath.documentId(), '==', ref.AdminID).get();
+            var creator = db.collection('Users').doc(getUserId());
+            console.log(creator.id)
+            creator.update({Communities: firebase.firestore.FieldValue.arrayUnion(ref.id)});
           navigate('/');
         }).catch((err) =>{
           console.log("Error " + err.message);
