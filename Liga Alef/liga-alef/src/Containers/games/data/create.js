@@ -2,11 +2,18 @@ import React, { useState } from "react";
 import db from "../firebaseStorage";
 import Alert from 'react-bootstrap/Alert';
 import Button from "react-bootstrap/Button";
+import { getUserId } from "../../../Context/AuthContext";
+import { InputLabel, MenuItem, FormControl, Select } from '@material-ui/core';
+import FetchCommunity from "./fetchComm";
 
 function Create(){
   const [game, setGame] = useState({day: "",month: "",year: "",time: "", location:"", minP:"", maxP:"", pitch:"", teams:""});
   const [show, setShow] = useState(false);
-  const [Community, setComm] = useState({id: "", name:""});
+  const [Community, setCommunity] = useState({id: "", name:""});
+
+  const [Comm, setComm] = useState("");
+  const [Comm2, setComm2] = useState([]);
+  const [info, setInfo] = useState({name:""});
 
   const handleChange = (event) =>{
     event.preventDefault();
@@ -14,6 +21,16 @@ function Create(){
     setGame((prev) => {
       return {...prev, [name]: value};
     });
+  };
+
+  const handleSelect = (key) => (event) => {
+    event.preventDefault();
+  setInfo({ [key]: event.target.value });
+  console.log(info);
+  };
+
+  const handleSelect2 = (key) => (event) => {
+    setComm({ [key]: event.target.value });
   };
 
   const addDoc = (event) => {
@@ -29,13 +46,23 @@ function Create(){
       Players: [],
       Date: {Day: game.day, Month: game.month, Year: game.year},
       Time: game.time,
-      Community: {Id: "", Name: ""}
+      Community: {Id: info.name, Name: Community.name}
     }).then(() => {
       setShow(true);
     }).catch((err) =>{
       console.log("Error " + err.message);
     })
   }
+
+  function fetchAll(e){
+    e.preventDefault();
+
+    db.collection("Users").doc(getUserId()).get().then((snapshot)=>{
+        if(snapshot){
+            setComm2(snapshot.data().Communities);
+        }
+    });
+    }
 
     return(
         <>
@@ -59,6 +86,16 @@ function Create(){
             <input type='number' name='month' value={game.month} onChange={handleChange} placeholder="Month" /><br />
             <input type='number' name='year' value={game.year} onChange={handleChange} placeholder="Year" /><br />
             <input type='text' name='time' value={game.time} onChange={handleChange} placeholder="Time - hh:mm" /><br />
+            <button onClick={fetchAll}>Search</button>
+            <div>
+                <select value={info.name} onChange={handleSelect("name")}>
+                <option value="">Choose Community</option>
+                {Comm2.map((option) => (
+                  <option value={option}>{option}</option>
+                ))}
+              </select>
+            </div>
+            <br />
             <button>Save Game</button>
         </form>
         </div>
