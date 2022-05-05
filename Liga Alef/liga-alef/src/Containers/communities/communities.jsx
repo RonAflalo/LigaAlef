@@ -5,7 +5,7 @@ import db from "../games/firebaseStorage";
 import './communities.css'
 import Fetch from "./fetch";
 import firebase from 'firebase/compat/app';
-
+import FetchMyComm from "./fetchMyComm";
 
 const Communities = () =>{
     const [comm, setComm] = useState ({name: "", type: "", maxmember: ""});
@@ -48,7 +48,7 @@ const Communities = () =>{
         <>
         <div>
         <h1>My Communities</h1>
-        <h4>List - Admin zone + Members + ???</h4>
+        <h4><FetchMyComm /></h4>
 
         <h1>Community Search</h1>
         <Fetch />
