@@ -25,7 +25,7 @@ function Fetch(){
                 });
             }
         });
-        console.log(allDocs);
+        //console.log(allDocs);
     }
 
     function fetchSingle(e){
@@ -53,7 +53,7 @@ function Fetch(){
                                 <h4>Community Name: {doc.Name}</h4>
                                 <h4>Type: {doc.Type}</h4>
                                 <h4>Max Members: {doc.MaxMember}</h4>
-                                <h4>Admin Id: {doc.AdminID}</h4>
+                                
                                 <br /><br />
                             </div>
                         )
