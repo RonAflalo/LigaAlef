@@ -3,17 +3,13 @@ import db from "../firebaseStorage";
 import Alert from 'react-bootstrap/Alert';
 import Button from "react-bootstrap/Button";
 import { getUserId } from "../../../Context/AuthContext";
-import { InputLabel, MenuItem, FormControl, Select } from '@material-ui/core';
-import FetchCommunity from "./fetchComm";
 
 function Create(){
   const [game, setGame] = useState({day: "",month: "",year: "",time: "", location:"", minP:"", maxP:"", pitch:"", teams:""});
   const [show, setShow] = useState(false);
   const [Community, setCommunity] = useState({id: "", name:""});
 
-  const [Comm, setComm] = useState("");
-  const [Comm2, setComm2] = useState([]);
-  const [info, setInfo] = useState({name:""});
+  const [Comm, setComm] = useState([]);
 
   const handleChange = (event) =>{
     event.preventDefault();
@@ -25,12 +21,8 @@ function Create(){
 
   const handleSelect = (key) => (event) => {
     event.preventDefault();
-  setInfo({ [key]: event.target.value });
-  console.log(info);
-  };
-
-  const handleSelect2 = (key) => (event) => {
-    setComm({ [key]: event.target.value });
+  setCommunity({ [key]: event.target.value });
+  console.log(Community);
   };
 
   const addDoc = (event) => {
@@ -46,7 +38,7 @@ function Create(){
       Players: [],
       Date: {Day: game.day, Month: game.month, Year: game.year},
       Time: game.time,
-      Community: {Id: info.name, Name: Community.name}
+      Community: {Id: Community.id, Name: "Comm"}
     }).then(() => {
       setShow(true);
     }).catch((err) =>{
@@ -59,7 +51,7 @@ function Create(){
 
     db.collection("Users").doc(getUserId()).get().then((snapshot)=>{
         if(snapshot){
-            setComm2(snapshot.data().Communities);
+            setComm(snapshot.data().Communities);
         }
     });
     }
@@ -88,9 +80,9 @@ function Create(){
             <input type='text' name='time' value={game.time} onChange={handleChange} placeholder="Time - hh:mm" /><br />
             <button onClick={fetchAll}>Search</button>
             <div>
-                <select value={info.name} onChange={handleSelect("name")}>
+                <select value={Community.id} onChange={handleSelect("id")}>
                 <option value="">Choose Community</option>
-                {Comm2.map((option) => (
+                {Comm.map((option) => (
                   <option value={option}>{option}</option>
                 ))}
               </select>
