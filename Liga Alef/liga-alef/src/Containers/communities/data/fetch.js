@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import db from "../games/firebaseStorage";
+import db from "../../games/firebaseStorage";
 
 function Fetch(){
     const [allDocs, setAllDocs] = useState([]);

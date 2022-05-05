@@ -3,13 +3,15 @@ import db from "../firebaseStorage";
 import Alert from 'react-bootstrap/Alert';
 import Button from "react-bootstrap/Button";
 import { getUserId } from "../../../Context/AuthContext";
+import firebase from 'firebase/compat/app';
 
 function Create(){
+  var fields;
   const [game, setGame] = useState({day: "",month: "",year: "",time: "", location:"", minP:"", maxP:"", pitch:"", teams:""});
   const [show, setShow] = useState(false);
   const [Community, setCommunity] = useState({id: "", name:""});
-
-  const [Comm, setComm] = useState([]);
+  const [arr, setArr] = useState([]);
+  const [res, setRes] = useState([]);
 
   const handleChange = (event) =>{
     event.preventDefault();
@@ -22,7 +24,10 @@ function Create(){
   const handleSelect = (key) => (event) => {
     event.preventDefault();
   setCommunity({ [key]: event.target.value });
-  console.log(Community);
+  db.collection("Community").doc(event.target.value).get().then((value) => {
+    fields = value.data();
+    setCommunity({id:event.target.value, name:fields.Name});
+    })
   };
 
   const addDoc = (event) => {
@@ -38,22 +43,42 @@ function Create(){
       Players: [],
       Date: {Day: game.day, Month: game.month, Year: game.year},
       Time: game.time,
-      Community: {Id: Community.id, Name: "Comm"}
+      Community: {Id: Community.id, Name: Community.name}
     }).then(() => {
       setShow(true);
+      var newGame = db.collection('Community').doc(Community.id);
+      console.log(newGame);
+      console.log(ref.id);
+      newGame.update({ActiveGames: firebase.firestore.FieldValue.arrayUnion(ref.id)});
     }).catch((err) =>{
       console.log("Error " + err.message);
     })
   }
 
+
+
+  function GetCommunities(){
+  db.collection("Users").doc(getUserId()).get().then((value) => {
+     fields = value.data();
+     fields = fields.Communities;
+     setArr(fields);
+  });
+  }
+
+  function addToRes(item){
+      db.collection("Community").doc(item).get().then((value) =>{
+          var temp = value.data();
+          setRes(res => [...res, temp]);
+      })
+  }
+
   function fetchAll(e){
     e.preventDefault();
-
-    db.collection("Users").doc(getUserId()).get().then((snapshot)=>{
-        if(snapshot){
-            setComm(snapshot.data().Communities);
-        }
-    });
+    GetCommunities();
+    setRes([]);
+    for(const i in arr){
+        addToRes(arr[i]);
+        } 
     }
 
     return(
@@ -78,12 +103,12 @@ function Create(){
             <input type='number' name='month' value={game.month} onChange={handleChange} placeholder="Month" /><br />
             <input type='number' name='year' value={game.year} onChange={handleChange} placeholder="Year" /><br />
             <input type='text' name='time' value={game.time} onChange={handleChange} placeholder="Time - hh:mm" /><br />
-            <button onClick={fetchAll}>Search</button>
+            <button onClick={fetchAll}>Click me twice before select Community and then save</button>
             <div>
                 <select value={Community.id} onChange={handleSelect("id")}>
                 <option value="">Choose Community</option>
-                {Comm.map((option) => (
-                  <option value={option}>{option}</option>
+                {res.map(option => (
+                  <option value={option.Community_ID} key={option.id}>{option.Name}</option>
                 ))}
               </select>
             </div>

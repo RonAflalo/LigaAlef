@@ -2,8 +2,8 @@ import { DocumentSnapshot } from "@firebase/firestore";
 import SelectInput from "@mui/material/Select/SelectInput";
 import React, { useState } from "react";
 import { RiFunctions } from "react-icons/ri";
-import { getUserId } from "../../Context/AuthContext";
-import db from "../games/firebaseStorage";
+import { getUserId } from "../../../Context/AuthContext";
+import db from "../../games/firebaseStorage";
 
 function FetchMyComm(){
     var fields;

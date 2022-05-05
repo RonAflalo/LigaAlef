@@ -1,67 +1,44 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { getUserId, getUserName } from "../../Context/AuthContext";
-import db from "../games/firebaseStorage";
 import './communities.css'
-import Fetch from "./fetch";
-import firebase from 'firebase/compat/app';
-import FetchMyComm from "./fetchMyComm";
+import Fetch from "./data/fetch";
+import Create from "./data/create";
+import FetchMyComm from "./data/fetchMyComm";
+import Accordion from 'react-bootstrap/Accordion';
 
 const Communities = () =>{
-    const [comm, setComm] = useState ({name: "", type: "", maxmember: ""});
-    const navigate = useNavigate();
 
-    const handleChange = (event) =>{
-        event.preventDefault();
-        const {name, value} = event.target;
-        setComm((prev) => {
-          return {...prev, [name]: value};
-        });
-      };
-
-    const addDocument = (event) => {
-        event.preventDefault();
-    
-        var ref = db.collection("Community").doc();
-        ref.set({
-          Community_ID: ref.id,
-          Name: comm.name,
-          Type: comm.type,
-          MaxMember: comm.maxmember,
-          Members: [],
-          ActiveGames: [],
-          AdminID: {Id: getUserId(), Name: getUserName()}}
-          ).then(() => {
-            ref.update({Members: firebase.firestore.FieldValue.arrayUnion(getUserId())});
-            //var creator = db.collection('Users').where(FieldPath.documentId(), '==', ref.AdminID).get();
-            var creator = db.collection('Users').doc(getUserId());
-            console.log(creator.id)
-            creator.update({Communities: firebase.firestore.FieldValue.arrayUnion(ref.id)});
-          navigate('/');
-        }).catch((err) =>{
-          console.log("Error " + err.message);
-        })
-      }
     
 
     return(
-        <>
-        <div>
-        <h1>My Communities</h1>
-        <h4><FetchMyComm /></h4>
+      <>
 
-        <h1>Community Search</h1>
-        <Fetch />
-
-        <h1>Create Community</h1>
-        <form onSubmit={addDocument}>   
-            <input type='text' name='name' value={comm.name} onChange={handleChange} placeholder="Community Name" /><br />
-            <input type='text' name='type' value={comm.type} onChange={handleChange} placeholder="Type" /><br />
-            <input type='number' name='maxmember' value={comm.maxmember} onChange={handleChange} placeholder="Max Member" /><br /> 
-        <button>Create!</button>
-        </form>
-        </div>
-        </>
+      <Accordion defaultActiveKey={['1']} alwaysOpen>
+  <Accordion.Item eventKey="0">
+    <Accordion.Header>Create Community</Accordion.Header>
+    <Accordion.Body>
+      <div>
+      <Create />
+      </div>
+    </Accordion.Body>
+  </Accordion.Item>
+  <Accordion.Item eventKey="1">
+    <Accordion.Header>My Communities</Accordion.Header>
+    <Accordion.Body>
+      <div>
+      <FetchMyComm />
+      </div>
+    </Accordion.Body>
+  </Accordion.Item>
+  <Accordion.Item eventKey="3">
+    <Accordion.Header>Communities Search</Accordion.Header>
+    <Accordion.Body>
+      <div>
+      <Fetch />
+      </div>
+    </Accordion.Body>
+  </Accordion.Item>
+</Accordion>
+</>
     );
 }
 
