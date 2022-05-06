@@ -25,7 +25,6 @@ function Fetch(){
                 });
             }
         });
-        //console.log(allDocs);
     }
 
     function fetchSingle(e){
@@ -43,7 +42,7 @@ function Fetch(){
             <input type='text' name='name' value={Comm.name} onChange={handleChange} placeholder="Community Name" />
             <input type='text' name='id' value={Comm.id} onChange={handleChange} placeholder="Community ID" />
             <input type='text' name='type' value={Comm.type} onChange={handleChange} placeholder="Community Type" />
-            <button onClick={fetchAll}>Search</button>
+            <button onClick={fetchAll}>Serach</button>
             <div>
                 {
                     allDocs.map((doc)=>{

@@ -37,7 +37,7 @@ function FetchMyComm(){
 
     return(
         <div>
-            <button onClick={fetchAll}>Search</button>
+            <button onClick={fetchAll}>Click Twice</button>
             <div>
                 {
                     res.map((option)=>(
