@@ -1,16 +1,19 @@
 import React, { useState } from "react";
 import db from "../firebaseStorage";
 import { getUserId } from "../../../Context/AuthContext";
+import Alert from 'react-bootstrap/Alert';
+import Button from "react-bootstrap/Button";
+import firebase from 'firebase/compat/app';
 
 function Fetch(){
     var fields, games;
     const [allDocs, setAllDocs] = useState([]);
-    const [singleDoc, setSingleDoc] = useState([]);
     const [gamesList, setGamesList] = useState([]);
     const [Community, setCommunity] = useState({id: "", name:""});
     const [arr, setArr] = useState([]);
     const [gamesArr, setGamesArr] = useState([]);
     const [res, setRes] = useState([]);
+    const [show, setShow] = useState(false);
 
     const handleSelect = (key) => (event) => {
         event.preventDefault();
@@ -101,25 +104,41 @@ function Fetch(){
             })
           }
 
+          const joinGame = (gameId) => (event) =>{
+            event.preventDefault();
+            var ref = db.collection("Games").doc(gameId);
+            ref.update({Players: firebase.firestore.FieldValue.arrayUnion(getUserId())});
+            setShow(true);
+            setAllDocs([]);
+        }
+
     return(
         <>
         <div>
             <h1>Games</h1>
+            <Alert show={show} variant="success">
+                <Alert.Heading>You Join Game Successfully</Alert.Heading>
+                    <p>Enjoy</p>
+                    <hr />
+                    <div className="d-flex justify-content-end">
+                    <Button onClick={() => setShow(false)} variant="outline-success">Ok!</Button>
+                    </div>
+                </Alert>
             <button onClick={fetchAll}>Show All Games</button>
             <button onClick={clearList}>Clear</button>
             <div>
                 {
                     allDocs.map((doc)=>(
-                            <div>
-                                <option>{doc.Location}</option>
-                                <option>{doc.minP}</option>
-                                <option>{doc.maxP}</option>
-                                <option>{doc.Teams}</option>
-                                <option>{doc.Pitch}</option>
-                                <option>{doc.Date.Day}.{doc.Date.Month}.{doc.Date.Year}</option>
-                                <option>{doc.Time}</option>
+                            <>
+                                <option>Game Location: {doc.Location}</option>
+                                <option>Min Players: {doc.minP}</option>
+                                <option>Max Players: {doc.maxP}</option>
+                                <option>Pitch Type: {doc.Pitch}</option>
+                                <option>Date: {doc.Date.Day}.{doc.Date.Month}.{doc.Date.Year}</option>
+                                <option>Time: {doc.Time}</option>
+                                <button onClick={joinGame(doc.Gid)}>Check In</button>
                                 <br />
-                            </div>
+                            </>
                         )
                     )
                 }

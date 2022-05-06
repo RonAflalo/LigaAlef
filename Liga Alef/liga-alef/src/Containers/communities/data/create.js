@@ -30,7 +30,7 @@ function Create(){
           MaxMember: comm.maxmember,
           Members: [],
           ActiveGames: [],
-          AdminID: {Id: getUserId(), Name: getUserName()}}
+          Admin: {Id: getUserId(), Name: getUserName()}}
           ).then(() => {
             ref.update({Members: firebase.firestore.FieldValue.arrayUnion(getUserId())});
             //var creator = db.collection('Users').where(FieldPath.documentId(), '==', ref.AdminID).get();

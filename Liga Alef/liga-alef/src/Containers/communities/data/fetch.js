@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import db from "../../games/firebaseStorage";
+import Alert from 'react-bootstrap/Alert';
+import Button from "react-bootstrap/Button";
+import { getUserId } from "../../../Context/AuthContext";
+import firebase from 'firebase/compat/app';
 
 function Fetch(){
+    const [show, setShow] = useState(false);
     const [allDocs, setAllDocs] = useState([]);
-    const [singleDoc, setSingleDoc] = useState({});
     const [Comm, setComm] = useState({name: "", id: "", type: ""});
 
     const handleChange = (event) =>{
@@ -27,18 +31,26 @@ function Fetch(){
         });
     }
 
-    function fetchSingle(e){
-        e.preventDefault();
-        db.collection("Community").doc("???").get().then((snapshot)=>{
-            if(snapshot){
-                setSingleDoc(snapshot.data());
-            }
-        });
-        console.log(singleDoc);
+    const joinCommunity = (commId) => (event) =>{
+        event.preventDefault();
+        var ref = db.collection("Community").doc(commId);
+        ref.update({Members: firebase.firestore.FieldValue.arrayUnion(getUserId())});
+        var creator = db.collection('Users').doc(getUserId());
+        creator.update({Communities: firebase.firestore.FieldValue.arrayUnion(ref.id)});
+        setShow(true);
+        setAllDocs([]);
     }
 
     return(
         <div>
+        <Alert show={show} variant="success">
+        <Alert.Heading>You Join Community Successfully</Alert.Heading>
+            <p>Enjoy</p>
+            <hr />
+            <div className="d-flex justify-content-end">
+            <Button onClick={() => setShow(false)} variant="outline-success">Ok!</Button>
+            </div>
+        </Alert>
             <input type='text' name='name' value={Comm.name} onChange={handleChange} placeholder="Community Name" />
             <input type='text' name='id' value={Comm.id} onChange={handleChange} placeholder="Community ID" />
             <input type='text' name='type' value={Comm.type} onChange={handleChange} placeholder="Community Type" />
@@ -47,14 +59,14 @@ function Fetch(){
                 {
                     allDocs.map((doc)=>{
                         return(
-                            <div>
-                                <h4>Community Id: {doc.Community_ID}</h4>
-                                <h4>Community Name: {doc.Name}</h4>
-                                <h4>Type: {doc.Type}</h4>
-                                <h4>Max Members: {doc.MaxMember}</h4>
-                                
+                            <>
+                                <option>Community Name: {doc.Name}</option>
+                                <option>Admin Name: {doc.AdminID.Name}</option>
+                                <option>Type: {doc.Type}</option>
+                                <option>Members: {doc.Members.length}/{doc.MaxMember}</option>
+                                <button onClick={joinCommunity(doc.Community_ID)}>Join</button>
                                 <br /><br />
-                            </div>
+                            </>
                         )
                     })
                 }
