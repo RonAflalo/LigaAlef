@@ -14,6 +14,8 @@ function Fetch(){
     const [gamesArr, setGamesArr] = useState([]);
     const [res, setRes] = useState([]);
     const [show, setShow] = useState(false);
+    const [players, setPlayers] = useState([]);
+
 
     const handleSelect = (key) => (event) => {
         event.preventDefault();
@@ -52,6 +54,8 @@ function Fetch(){
     function clearList(e){
         e.preventDefault();
         setAllDocs([]);
+        setPlayers([]);
+
     }
 
     function GetCommunities(){
@@ -112,6 +116,25 @@ function Fetch(){
             setAllDocs([]);
         }
 
+        const jumpTo = (gameId) => (event) =>{
+            event.preventDefault();
+            setAllDocs([]);
+            db.collection("Games").doc(gameId).get().then((snapshot)=>{
+                if(snapshot){
+                    var temp = snapshot.data();
+                    setAllDocs(allDocs => [...allDocs, temp]);
+                    temp = temp.Players;
+                    temp.forEach((player)=>{
+                        db.collection("Users").doc(player).get().then((value) => {
+                            setPlayers((prev)=>{
+                                return[...prev,value.data()];
+                            });
+                         });
+                    });
+                }
+            }); 
+        }
+
     return(
         <>
         <div>
@@ -128,15 +151,28 @@ function Fetch(){
             <button onClick={clearList}>Clear</button>
             <div>
                 {
+                    players.map((player)=>(
+                        <>
+                            <option>Player Name: {player.Name}</option>
+                        </>
+                        )
+                    )
+                }
+                    <br />
+                {
                     allDocs.map((doc)=>(
                             <>
                                 <option>Game Location: {doc.Location}</option>
-                                <option>Min Players: {doc.minP}</option>
-                                <option>Max Players: {doc.maxP}</option>
+                                <option>Min Players To Play: {doc.minP}</option>
+                                <option>Players: {doc.Players.length}/{doc.maxP}</option>
                                 <option>Pitch Type: {doc.Pitch}</option>
                                 <option>Date: {doc.Date.Day}.{doc.Date.Month}.{doc.Date.Year}</option>
                                 <option>Time: {doc.Time}</option>
                                 <button onClick={joinGame(doc.Gid)}>Check In</button>
+                                <button>Waze</button>
+                                <button>Sync</button>
+                                <button>Weather</button>
+                                <button onClick={jumpTo(doc.Gid)}>Grouping</button>
                                 <br />
                             </>
                         )
@@ -163,7 +199,7 @@ function Fetch(){
                             <div>
                                 <option>{doc.Location}</option>
                                 <option>{doc.minP}</option>
-                                <option>{doc.maxP}</option>
+                                <option>{doc.Players.length}/{doc.maxP}</option>
                                 <option>{doc.Teams}</option>
                                 <option>{doc.Pitch}</option>
                                 <option>{doc.Date.Day}.{doc.Date.Month}.{doc.Date.Year}</option>
