@@ -17,6 +17,7 @@ function Fetch(){
     const [players, setPlayers] = useState([]);
 
 
+var temp;
     const handleSelect = (key) => (event) => {
         event.preventDefault();
       setCommunity({ [key]: event.target.value });
@@ -25,6 +26,24 @@ function Fetch(){
         setCommunity({id:event.target.value, name:fields.Name});
         })
       };
+
+    
+    function fetchMyGames(e){
+        e.preventDefault();
+
+        db.collection("Games").get().then((snapshot)=>{
+            if(snapshot.docs.length>0){
+                snapshot.docs.forEach((doc)=>{
+                    temp = doc.get("Players");
+                    if(temp.includes(getUserId())){
+                    setAllDocs((prev)=>{
+                        return[...prev,doc.data()];
+                    });}
+                });
+            }
+        });
+        console.log(allDocs);
+    }
 
     function fetchAll(e){
         e.preventDefault();
@@ -147,6 +166,7 @@ function Fetch(){
                     <Button onClick={() => setShow(false)} variant="outline-success">Ok!</Button>
                     </div>
                 </Alert>
+            <button onClick={fetchMyGames}>Show My Games</button>    
             <button onClick={fetchAll}>Show All Games</button>
             <button onClick={clearList}>Clear</button>
             <div>
