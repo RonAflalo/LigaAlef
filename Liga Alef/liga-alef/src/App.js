@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Brand, Navbar, Footer} from './Components';
 import { Header, About, Games, Login, Signup, Dashboard, UpdateProfile, ForgotPassword, Continue, Communities} from './Containers';
+import * as contaieners from './Containers';
 import { Routes, Route} from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css';
@@ -12,6 +13,13 @@ const Empty = () => (
   <>
   </>
 )
+
+
+const a = ()=>2
+
+a() //2
+const b = ()=>  <>
+</>
 
 const App = () => {
 

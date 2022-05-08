@@ -5,7 +5,7 @@ import db from "../games/firebaseStorage";
 import './communities.css'
 import Fetch from "./fetch";
 
-const Communities = () =>{
+ const Communities = () =>{
     const [comm, setComm] = useState ({name: "", type: "", maxmember: ""});
     const navigate = useNavigate();
 
