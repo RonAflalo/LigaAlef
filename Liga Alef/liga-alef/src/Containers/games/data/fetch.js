@@ -47,6 +47,8 @@ var temp;
 
     function fetchAll(e){
         e.preventDefault();
+
+        setAllDocs([]);
         db.collection("Games").get().then((snapshot)=>{
             if(snapshot.docs.length>0){
                 snapshot.docs.forEach((doc)=>{
