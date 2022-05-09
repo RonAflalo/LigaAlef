@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Brand, Navbar, Footer} from './Components';
-import { Header, About, Games, Login, Signup, Dashboard, UpdateProfile, ForgotPassword, Continue, Communities} from './Containers';
+import { Header, About, Games, Login, Signup, Dashboard, UpdateProfile, ForgotPassword, Continue, Communities, Members} from './Containers';
 import { Routes, Route} from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css';
@@ -31,6 +31,7 @@ const App = () => {
             <Route path="/dashboard" element={<Empty />} />
             <Route path="/update-profile" element={<Empty />} />
             <Route path="/forgot-password" element={<Empty />} />
+            <Route path="/members" element={<Empty />} />
 
           </Routes>
         </div>
@@ -45,6 +46,7 @@ const App = () => {
           <Route path="/dashboard" element={<Dashboard/>} />
           <Route path="/update-profile" element={<UpdateProfile/>} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/members" element={<Members />} />
         </Routes>
         <Routes>
         <Route path='/' element={<Footer />} />
@@ -57,6 +59,7 @@ const App = () => {
         <Route path="/dashboard" element={<Empty/>} />
         <Route path="/update-profile" element={<Empty/>} />
         <Route path="/forgot-password" element={<Empty />} />
+        <Route path="/members" element={<Empty />} />
         </Routes>
     </div>
     </AuthProvider>
