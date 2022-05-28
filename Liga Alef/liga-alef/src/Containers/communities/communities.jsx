@@ -4,6 +4,7 @@ import Fetch from "./data/fetch";
 import Create from "./data/create";
 import FetchMyComm from "./data/fetchMyComm";
 import Accordion from 'react-bootstrap/Accordion';
+import { Link } from "react-router-dom";
 
 const Communities = () =>{
     return(
@@ -31,6 +32,14 @@ const Communities = () =>{
           <Accordion.Body>
             <div>
             <Fetch />
+            </div>
+          </Accordion.Body>
+        </Accordion.Item>
+        <Accordion.Item eventKey="4">
+          <Accordion.Header>Admin Zone</Accordion.Header>
+          <Accordion.Body>
+            <div>
+            <p><Link to='/members'>Users List</Link></p>
             </div>
           </Accordion.Body>
         </Accordion.Item>
