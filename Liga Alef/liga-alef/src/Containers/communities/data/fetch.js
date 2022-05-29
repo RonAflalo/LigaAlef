@@ -88,7 +88,7 @@ function Fetch() {
           return (
             <>
               <option>Community Name: {doc.Name}</option>
-              <option>Admin Name: {doc.AdminID.Name}</option>
+              <option>Admin Name: {doc.Admin.Name}</option>
               <option>Type: {doc.Type}</option>
               <option>
                 Members: {doc.Members.length}/{doc.MaxMember}

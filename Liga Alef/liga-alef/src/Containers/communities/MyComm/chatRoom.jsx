@@ -1,5 +1,5 @@
 import React from "react";
-// import "./chat.css";
+import "./chat.css";
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import "firebase/compat/auth";
@@ -46,14 +46,14 @@ export const ChatRoom = (props) => {
         <span ref={dummy}></span>
       </main>
 
-      <form onSubmit={sendMessage}>
+      <form className="chatMessage" onSubmit={sendMessage}>
         <input
           value={formValue}
           onChange={(e) => setFormValue(e.target.value)}
           placeholder="say something nice"
         />
 
-        <button type="submit" disabled={!formValue}>
+        <button className='submitButton' type="submit" disabled={!formValue}>
           🕊️
         </button>
       </form>
@@ -67,7 +67,12 @@ export const ChatRoom = (props) => {
     const messageClass = uid === getUserId() ? "sent" : "received";
     return (
       <div className={`message ${messageClass}`}>
-        <p>{name} : {text}</p>
+        <div className='userCircle'>
+          <div className='uname'>
+          {name}
+          </div>
+           </div>
+        <p>{text}</p>
       </div>
     );
   }
