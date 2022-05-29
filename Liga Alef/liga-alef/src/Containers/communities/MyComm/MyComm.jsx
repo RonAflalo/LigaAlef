@@ -1,5 +1,5 @@
 import React from "react";
-// import "./chat.css";
+//import "./chat.css";
 import { ChatRoom } from "./chatRoom";
 import Members from "./Members";
 import Accordion from 'react-bootstrap/Accordion';
@@ -24,6 +24,14 @@ const Chat = () => {
             </div>
           </Accordion.Body>
         </Accordion.Item>
+        <Accordion.Item eventKey="3">
+          <Accordion.Header>Community Members</Accordion.Header>
+          <Accordion.Body>
+            <div>
+            <Members cid={id}/>
+            </div>
+          </Accordion.Body>
+        </Accordion.Item>
         <Accordion.Item eventKey="1">
           <Accordion.Header>Community Chat</Accordion.Header>
           <Accordion.Body>
@@ -33,14 +41,7 @@ const Chat = () => {
             </div>
           </Accordion.Body>
         </Accordion.Item>
-        <Accordion.Item eventKey="3">
-          <Accordion.Header>Community Members</Accordion.Header>
-          <Accordion.Body>
-            <div>
-            <Members cid={id}/>
-            </div>
-          </Accordion.Body>
-        </Accordion.Item>
+       
       </Accordion>
       </>
     );
