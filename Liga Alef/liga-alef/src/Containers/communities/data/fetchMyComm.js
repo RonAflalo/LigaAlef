@@ -27,7 +27,7 @@ function FetchMyComm() {
       .get()
       .then((value) => {
         var temp = value.data();
-        //temp = temp.Name;
+        console.log(temp.Name);
         setRes((res) => [...res, temp]);
       });
   }
@@ -49,11 +49,11 @@ function FetchMyComm() {
           <>
             <option value={option.Name}>{option.Name}</option>
             <Link
-              to="/chat"
+              to="/my-comm"
               state={{ name: option.Name, id: option.Community_ID }}>
-              Community Chat
+              Community Page
             </Link>
-            <br />
+            <br /><br />
           </>
         ))}
       </div>
