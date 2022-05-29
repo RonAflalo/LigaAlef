@@ -11,7 +11,6 @@ const Chat = () => {
     const com = location.state;
     const name = com["name"]; 
     const id = com["id"]; 
-    console.log(name,id);
 
     return (
       <>

@@ -1,7 +1,4 @@
-import { DocumentSnapshot } from "@firebase/firestore";
-import SelectInput from "@mui/material/Select/SelectInput";
 import React, { useState } from "react";
-import { RiFunctions } from "react-icons/ri";
 import { getUserId } from "../../../Context/AuthContext";
 import db from "../../games/firebaseStorage";
 import { Link } from "react-router-dom";
@@ -27,7 +24,6 @@ function FetchMyComm() {
       .get()
       .then((value) => {
         var temp = value.data();
-        console.log(temp.Name);
         setRes((res) => [...res, temp]);
       });
   }

@@ -47,8 +47,6 @@ function Create(){
     }).then(() => {
       setShow(true);
       var newGame = db.collection('Community').doc(Community.id);
-      console.log(newGame);
-      console.log(ref.id);
       newGame.update({ActiveGames: firebase.firestore.FieldValue.arrayUnion(ref.id)});
     }).catch((err) =>{
       console.log("Error " + err.message);
