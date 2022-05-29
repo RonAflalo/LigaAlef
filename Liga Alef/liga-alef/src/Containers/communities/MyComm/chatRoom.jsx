@@ -4,14 +4,12 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import "firebase/compat/auth";
 import { useState, useEffect, useRef } from "react";
-import { useCollectionData } from "react-firebase-hooks/firestore";
+import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { getUserId, getUserName } from "../../../Context/AuthContext";
 import db from "../../games/firebaseStorage";
-import { getDisplayName } from "@mui/utils";
 
 
 export const ChatRoom = (props) => {
-    //console.log(props.cid);
     const dummy = useRef();
   const messagesRef = db.collection("messages");
   const query = messagesRef.orderBy("createdAt").limitToLast(25);

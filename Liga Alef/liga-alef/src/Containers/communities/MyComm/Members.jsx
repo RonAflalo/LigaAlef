@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
-import './communities.css';
-import { getUserId } from '../../Context/AuthContext';
-import db from '../games/firebaseStorage';
+import "../communities.css";
+import { getUserId } from '../../../Context/AuthContext';
+import db from '../../games/firebaseStorage';
 
-const Members = () => {
+const Members = (props) => {
     var fields, grade;
     const [res, setRes] = useState([]);
     const [arr, setArr] = useState([]);
@@ -56,11 +56,11 @@ const Members = () => {
             } 
     }
 
-    const jumpTo = (commId) => (event) =>{
+    const jumpTo = () => (event) =>{
         event.preventDefault();
 
         setMembers([]);
-        db.collection("Community").doc(commId).get().then((snapshot)=>{
+        db.collection("Community").doc(props.cid).get().then((snapshot)=>{
             if(snapshot){
                 var temp = snapshot.data();
                 temp = temp.Members;
@@ -77,25 +77,8 @@ const Members = () => {
 
     return(
         <>
-            <h1>Your Community</h1>
-            <br />
-            <button onClick={fetchAll}>Click me twice before select Community and then save</button>
             <div>
-
-                {res.map(option => (
-                <>
-                    <select value={Community.id} onChange={handleSelect("id")}>
-                    <option value="">Choose Community</option>
-                    <option value={option.Community_ID} key={option.id}>{option.Name}</option>
-                    </select>
-                    <button onClick={jumpTo(option.Community_ID)}>Get Members</button>
-                    <br /> 
-                  </>
-                ))}
-
-            </div>
-            <br />
-            <div>
+                <button onClick={jumpTo()}>Show Community Members</button>
             {
                 members.map((member)=>(
                         <>
@@ -114,4 +97,4 @@ const Members = () => {
     )
 }
 
-export default Members
+export default Members;

@@ -12,14 +12,13 @@ import {
   ForgotPassword,
   Continue,
   Communities,
-  Members,
+  MyComm
 } from "./Containers";
 import { Routes, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
 import { AuthProvider } from "./Context/AuthContext";
-import Chat from "./Containers/communities/Chat/chat";
 
 const Empty = () => <></>;
 
@@ -40,8 +39,7 @@ const App = () => {
             <Route path="/dashboard" element={<Empty />} />
             <Route path="/update-profile" element={<Empty />} />
             <Route path="/forgot-password" element={<Empty />} />
-            <Route path="/members" element={<Empty />} />
-            <Route path="/chat" element={<Empty />} />
+            <Route path="/my-comm" element={<Empty />} />
           </Routes>
         </div>
         <Routes>
@@ -55,8 +53,7 @@ const App = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/update-profile" element={<UpdateProfile />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/members" element={<Members />} />
-          <Route path="/chat" element={<Chat />} />
+          <Route path="/my-comm" element={<MyComm />} />
         </Routes>
         <Routes>
           <Route path="/" element={<Footer />} />
@@ -69,8 +66,7 @@ const App = () => {
           <Route path="/dashboard" element={<Empty />} />
           <Route path="/update-profile" element={<Empty />} />
           <Route path="/forgot-password" element={<Empty />} />
-          <Route path="/members" element={<Empty />} />
-          <Route path="/chat" element={<Empty />} />
+          <Route path="/my-comm" element={<Empty />} />
         </Routes>
       </div>
     </AuthProvider>

@@ -35,14 +35,6 @@ const Communities = () =>{
             </div>
           </Accordion.Body>
         </Accordion.Item>
-        <Accordion.Item eventKey="4">
-          <Accordion.Header>Admin Zone</Accordion.Header>
-          <Accordion.Body>
-            <div>
-            <p><Link to='/members'>Users List</Link></p>
-            </div>
-          </Accordion.Body>
-        </Accordion.Item>
       </Accordion>
 </>
     );
