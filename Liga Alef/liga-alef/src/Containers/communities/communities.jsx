@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import './communities.css'
 import Fetch from "./data/fetch";
 import Create from "./data/create";
 import FetchMyComm from "./data/fetchMyComm";
 import Accordion from 'react-bootstrap/Accordion';
-import { Link } from "react-router-dom";
 
 const Communities = () =>{
     return(

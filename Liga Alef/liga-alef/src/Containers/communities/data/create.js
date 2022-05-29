@@ -37,9 +37,7 @@ function Create() {
         ref.update({
           Members: firebase.firestore.FieldValue.arrayUnion(getUserId()),
         });
-        //var creator = db.collection('Users').where(FieldPath.documentId(), '==', ref.AdminID).get();
         var creator = db.collection("Users").doc(getUserId());
-        console.log(creator.id);
         creator.update({
           Communities: firebase.firestore.FieldValue.arrayUnion(ref.id),
         });

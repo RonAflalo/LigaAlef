@@ -1,28 +1,15 @@
 import React, {useState} from 'react';
 import "../communities.css";
-import { getUserId } from '../../../Context/AuthContext';
 import db from '../../games/firebaseStorage';
 
 const Members = (props) => {
-    var fields, grade;
-    const [res, setRes] = useState([]);
-    const [arr, setArr] = useState([]);
+    var grade;
     const [members, setMembers] = useState([]);
-    const [Community, setCommunity] = useState({id: "", name:""});
     
     const handleChange = (event) =>{
         event.preventDefault();
 
         grade = event.target.value;
-      };
-
-    const handleSelect = (key) => (event) => {
-        event.preventDefault();
-      setCommunity({ [key]: event.target.value });
-      db.collection("Community").doc(event.target.value).get().then((value) => {
-        fields = value.data();
-        setCommunity({id:event.target.value, name:fields.Name});
-        })
       };
 
     const updateGrade = (userId) => (event) => {
@@ -32,31 +19,8 @@ const Members = (props) => {
     ref.update({'Grades.Soccer': grade})
     }
 
-    function GetCommunities(){
-    db.collection("Users").doc(getUserId()).get().then((value) => {
-        fields = value.data();
-        fields = fields.Communities;
-        setArr(fields);
-    });
-    }
-    
-    function addToRes(item){
-        db.collection("Community").doc(item).get().then((value) =>{
-            var temp = value.data();
-            setRes(res => [...res, temp]);
-        })
-    }
-    
-    function fetchAll(e){
-        e.preventDefault();
-        GetCommunities();
-        setRes([]);
-        for(const i in arr){
-            addToRes(arr[i]);
-            } 
-    }
 
-    const jumpTo = () => (event) =>{
+    const fetchAll = () => (event) =>{
         event.preventDefault();
 
         setMembers([]);
@@ -78,7 +42,7 @@ const Members = (props) => {
     return(
         <>
             <div>
-                <button onClick={jumpTo()}>Show Community Members</button>
+                <button onClick={fetchAll()}>Show Community Members</button>
             {
                 members.map((member)=>(
                         <>

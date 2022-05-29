@@ -33,8 +33,6 @@ function Fetch() {
       });
   };
 
-  const showChat = () => {};
-
   const joinCommunity = (commId) => (event) => {
     event.preventDefault();
     var ref = db.collection("Community").doc(commId);
