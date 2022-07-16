@@ -8,7 +8,7 @@ import firebase from "firebase/compat/app";
 function Fetch() {
   const [show, setShow] = useState(false);
   const [allDocs, setAllDocs] = useState([]);
-  const [Comm, setComm] = useState({ name: "", id: "", type: "" });
+  const [Comm, setComm] = useState({ name: "Community Name", id: "", type: "Soccer" });
 
   const handleChange = (event) => {
     event.preventDefault();
@@ -18,8 +18,38 @@ function Fetch() {
     });
   };
 
+  const handleSelect = (key) => (event) => {
+    event.preventDefault();
+    setComm((prev) => {
+      return { ...prev, [key]: event.target.value };
+    });
+  };
+
+  const fetchFiltered = (e) => {
+    e.preventDefault();
+    setAllDocs([]);
+
+    console.log(Comm.name);
+    console.log(Comm.type);
+
+    db.collection("Community").where('Name', '==', Comm.name).where('Type', '==', Comm.type)
+      .get()
+      .then((snapshot) => {
+        if (snapshot.docs.length > 0) {
+          snapshot.docs.forEach((doc) => {
+            setAllDocs((prev) => {
+              return [...prev, doc.data()];
+            });
+          });
+        }
+      });
+
+  };  
+
   const fetchAll = (e) => {
     e.preventDefault();
+    setAllDocs([]);
+
     db.collection("Community")
       .get()
       .then((snapshot) => {
@@ -32,6 +62,12 @@ function Fetch() {
         }
       });
   };
+
+  const clearList = (e) =>{
+    e.preventDefault();
+    setAllDocs([]);
+    setComm([]);
+  }
 
   const joinCommunity = (commId) => (event) => {
     event.preventDefault();
@@ -64,7 +100,7 @@ function Fetch() {
         name="name"
         value={Comm.name}
         onChange={handleChange}
-        placeholder="Community Name"
+        placeholder="Comm.name"
       />
       <input
         type="text"
@@ -73,14 +109,14 @@ function Fetch() {
         onChange={handleChange}
         placeholder="Community ID"
       />
-      <input
-        type="text"
-        name="type"
-        value={Comm.type}
-        onChange={handleChange}
-        placeholder="Community Type"
-      />
-      <button onClick={fetchAll}>Serach</button>
+      <select value={Comm.type} onChange={handleSelect("type")}>
+        <option value={"Soccer"}>Soccer</option>
+        <option value={"BasketBall"}>BasketBall</option>
+        <option value={"VolyBall"}>VolyBall</option>
+      </select>
+      <button onClick={fetchFiltered}>Serach</button>
+      <button onClick={fetchAll}>Show All</button>
+      <button onClick={clearList}>Clear</button>
       <div>
         {allDocs.map((doc) => {
           return (
