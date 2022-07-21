@@ -105,9 +105,11 @@ a.rotate-box-1:hover, a.rotate-box-2:hover {
 }
 .rotate-box-1 h4, .rotate-box-2 h4 {
 	font-weight: 400;
+	color: #676D75;
 }
 .rotate-box-1 p {
 	padding: 0 10px;
+	color: #676D75;
 }
 .rotate-box-1 .rotate-box-info {
 	padding-left: 60px;

@@ -14,9 +14,13 @@ const Continue = () => {
     ref.set({
       Name: getUserName(),
       Email: getUserEmail(),
-      Grades: { Soccer: '2.5',
-                Basketball: '2.5',
-                Vollyball: '2.5'},
+      Grades: { Soccer: 2.5,
+                SoccerVotes: 0,
+                Basketball: 2.5,
+                BasketballVotes: 0,
+                Vollyball: 2.5,
+                VollyballVotes: 0,
+                Voted: false},
       Communities: [],
       User_ID: getUserId()}
       ).then(() => {

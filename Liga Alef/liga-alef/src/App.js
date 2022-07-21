@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Brand, Navbar, Footer } from "./Components";
+import { Navbar, Footer } from "./Components";
 import {
   Header,
   About,

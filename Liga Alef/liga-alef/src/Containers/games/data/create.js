@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import db from "../firebaseStorage";
 import Alert from 'react-bootstrap/Alert';
 import Button from "react-bootstrap/Button";
@@ -10,8 +10,17 @@ function Create(){
   const [game, setGame] = useState({day: "",month: "",year: "",time: "", location:"", minP:"", maxP:"", pitch:"", teams:""});
   const [show, setShow] = useState(false);
   const [Community, setCommunity] = useState({id: "", name:""});
-  const [arr, setArr] = useState([]);
   const [res, setRes] = useState([]);
+
+  useEffect(() => {
+      db.collection("Users").doc(getUserId()).get().then((value) => {
+      var arr = value.data();
+      arr = arr.Communities;
+      for(const i in arr){
+        addToRes(arr[i]);
+        }
+      })
+  }, [])
 
   const handleChange = (event) =>{
     event.preventDefault();
@@ -59,7 +68,6 @@ function Create(){
   db.collection("Users").doc(getUserId()).get().then((value) => {
      fields = value.data();
      fields = fields.Communities;
-     setArr(fields);
   });
   }
 
@@ -74,8 +82,8 @@ function Create(){
     e.preventDefault();
     GetCommunities();
     setRes([]);
-    for(const i in arr){
-        addToRes(arr[i]);
+    for(const i in fields){
+        addToRes(fields[i]);
         } 
     }
 
@@ -101,7 +109,6 @@ function Create(){
             <input type='number' name='month' value={game.month} onChange={handleChange} placeholder="Month" /><br />
             <input type='number' name='year' value={game.year} onChange={handleChange} placeholder="Year" /><br />
             <input type='text' name='time' value={game.time} onChange={handleChange} placeholder="Time - hh:mm" /><br />
-            <button onClick={fetchAll}>Click me twice before select Community and then save</button>
             <div>
                 <select value={Community.id} onChange={handleSelect("id")}>
                 <option value="">Choose Community</option>

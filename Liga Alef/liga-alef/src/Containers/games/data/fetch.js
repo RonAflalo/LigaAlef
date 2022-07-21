@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import db from "../firebaseStorage";
 import { getUserId } from "../../../Context/AuthContext";
 import Alert from "react-bootstrap/Alert";
@@ -9,10 +9,23 @@ function Fetch() {
   var fields, games;
   const [gamesList, setGamesList] = useState([]);
   const [Community, setCommunity] = useState({ id: "", name: "" });
-  const [arr, setArr] = useState([]);
   const [gamesArr, setGamesArr] = useState([]);
   const [res, setRes] = useState([]);
   const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    db.collection("Users")
+      .doc(getUserId())
+      .get()
+      .then((value) => {
+        var arr = value.data();
+        arr = arr.Communities;
+        for (const i in arr) {
+          addToRes(arr[i]);
+        }
+      });
+
+  }, [])
 
   const handleSelect = (key) => (event) => {
     event.preventDefault();
@@ -33,7 +46,7 @@ function Fetch() {
       .then((value) => {
         fields = value.data();
         fields = fields.Communities;
-        setArr(fields);
+        //setArr(fields);
       });
   }
 
@@ -64,9 +77,9 @@ function Fetch() {
     e.preventDefault();
     GetCommunities();
     setRes([]);
-    for (const i in arr) {
-      addToRes(arr[i]);
-    }
+    //for (const i in arr) {
+    //  addToRes(arr[i]);
+    //}
   }
 
   function fetchGames(e) {
@@ -113,9 +126,6 @@ function Fetch() {
         </Alert>
       </div>
       <form onSubmit={fetchGames}>
-        <button onClick={fetchComm}>
-          Click me twice before select Community and then save
-        </button>
         <div>
           <select value={Community.id} onChange={handleSelect("id")}>
             <option value="">All Communities</option>
