@@ -8,4 +8,4 @@ export { default as UpdateProfile } from "./dashboard/update-profile";
 export { default as ForgotPassword } from "./dashboard/forgot-password";
 export { default as Communities } from "./communities/Communities";
 export { default as Continue } from "./signup/Continue";
-export { default as MyComm } from "./communities/MyComm/MyComm"
+export { default as MyComm } from "./communities/MyComm/MyComm";

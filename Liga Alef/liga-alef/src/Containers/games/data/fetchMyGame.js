@@ -15,6 +15,7 @@ function FetchMyGame() {
   function fetchMyGames(e) {
     e.preventDefault();
 
+    clearList(e);
     db.collection("Games")
       .get()
       .then((snapshot) => {
@@ -34,7 +35,7 @@ function FetchMyGame() {
   function fetchAll(e) {
     e.preventDefault();
 
-    setAllDocs([]);
+    clearList(e);
     db.collection("Games")
       .get()
       .then((snapshot) => {

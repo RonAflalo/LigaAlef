@@ -8,7 +8,7 @@ import firebase from "firebase/compat/app";
 function Fetch() {
   const [show, setShow] = useState(false);
   const [allDocs, setAllDocs] = useState([]);
-  const [Comm, setComm] = useState({ name: "Community Name", id: "", type: "Soccer" });
+  const [Comm, setComm] = useState({ name: "", id: "", type: "Soccer" });
 
   const handleChange = (event) => {
     event.preventDefault();
@@ -32,18 +32,22 @@ function Fetch() {
     console.log(Comm.name);
     console.log(Comm.type);
 
-    db.collection("Community").where('Name', '==', Comm.name).where('Type', '==', Comm.type)
-      .get()
-      .then((snapshot) => {
-        if (snapshot.docs.length > 0) {
-          snapshot.docs.forEach((doc) => {
-            setAllDocs((prev) => {
-              return [...prev, doc.data()];
-            });
+    var query = db.collection("Community");
+    if(Comm.name)
+      query = query.where('Name', '==', Comm.name);
+    if(Comm.id)
+      query = query.where('Community_ID', '==', Comm.id);
+      query = query.where('Type', '==', Comm.type);
+    query.get().then((snapshot) => {
+      if (snapshot.docs.length > 0) {
+        snapshot.docs.forEach((doc) => {
+          setAllDocs((prev) => {
+            return [...prev, doc.data()];
           });
-        }
-      });
-
+        });
+      }
+    });
+      setComm({name: '', id: '', type: 'Soccer'});
   };  
 
   const fetchAll = (e) => {
@@ -100,7 +104,7 @@ function Fetch() {
         name="name"
         value={Comm.name}
         onChange={handleChange}
-        placeholder="Comm.name"
+        placeholder="Community Name"
       />
       <input
         type="text"
@@ -111,9 +115,10 @@ function Fetch() {
       />
       <select value={Comm.type} onChange={handleSelect("type")}>
         <option value={"Soccer"}>Soccer</option>
-        <option value={"BasketBall"}>BasketBall</option>
-        <option value={"VolyBall"}>VolyBall</option>
+        <option value={"Basketball"}>BasketBall</option>
+        <option value={"Volyball"}>VolyBall</option>
       </select>
+      <br />
       <button onClick={fetchFiltered}>Serach</button>
       <button onClick={fetchAll}>Show All</button>
       <button onClick={clearList}>Clear</button>

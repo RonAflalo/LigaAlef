@@ -21,8 +21,6 @@ export const ChatRoom = (props) => {
   const sendMessage = async (e) => {
     e.preventDefault();
 
-    
-
     await messagesRef.add({
       text: formValue,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
