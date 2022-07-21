@@ -1,22 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { getUserId } from "../../../Context/AuthContext";
 import db from "../../games/firebaseStorage";
 import { Link } from "react-router-dom";
 function FetchMyComm() {
-  var fields;
   const [arr, setArr] = useState([]);
   const [res, setRes] = useState([]);
 
-  function GetCommunities() {
+  useEffect(() => {
     db.collection("Users")
-      .doc(getUserId())
-      .get()
-      .then((value) => {
-        fields = value.data();
-        fields = fields.Communities;
-        setArr(fields);
-      });
-  }
+    .doc(getUserId())
+    .get()
+    .then((value) => {
+      var fields = value.data();
+      fields = fields.Communities;
+      for (const i in fields) {
+        addToRes(fields[i]);
+      }
+    });
+  }, [])
 
   function addToRes(item) {
     db.collection("Community")
@@ -30,7 +31,7 @@ function FetchMyComm() {
 
   function fetchAll(e) {
     e.preventDefault();
-    GetCommunities();
+    //GetCommunities();
     setRes([]);
     for (const i in arr) {
       addToRes(arr[i]);
@@ -39,7 +40,6 @@ function FetchMyComm() {
 
   return (
     <div>
-      <button onClick={fetchAll}>Click Twice</button>
       <div>
         {res.map((option) => (
           <>
