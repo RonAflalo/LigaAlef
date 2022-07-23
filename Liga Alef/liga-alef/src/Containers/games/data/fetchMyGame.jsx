@@ -10,6 +10,8 @@ const FetchMyGame = () => {
   const [show, setShow] = useState(false);
   const [wait, setWait] = useState(false);
   const [problem, setProblem] = useState(false);
+  const [secondChance, setSecondChance] = useState(false);
+  const [game_ID, setGameID] = useState();
   const [tempPlayer, setTempPlayer] = useState([]);
   const [players, setPlayers] = useState([]);
 
@@ -76,10 +78,8 @@ const FetchMyGame = () => {
       var playersList = snapshot.data();
       playersList=playersList.Players;
       if(playersList.find((player)=>player===getUserId())){
-        console.log('Hello');
-        ref.update({
-          Players: firebase.firestore.FieldValue.arrayRemove(getUserId()),
-        });
+        setSecondChance(true);
+        setGameID(gameId);
       }
       else{
       playersList = snapshot.data();
@@ -100,6 +100,26 @@ const FetchMyGame = () => {
     })
     setAllDocs([]);
   };
+
+  function updateGameList(){
+    var ref = db.collection("Games").doc(game_ID);
+    ref.update({
+      Players: firebase.firestore.FieldValue.arrayRemove(getUserId()),
+    });
+    ref.get().then((snapshot)=>{
+      var waitingList = snapshot.data();
+      waitingList = waitingList.Waiting;
+      if(waitingList.length>0)
+      {
+        ref.update({
+          Waiting: firebase.firestore.FieldValue.arrayRemove(waitingList[0]),
+          Players: firebase.firestore.FieldValue.arrayUnion(waitingList[0]),
+        });
+      }
+    });
+    setSecondChance(false)
+        //sent E-Mail
+  }
 
   function tempFunc()
   {
@@ -189,6 +209,15 @@ const FetchMyGame = () => {
             <Button onClick={() => setProblem(false)} variant="outline-success">
               Ok!
             </Button>
+          </div>
+        </Alert>
+        <Alert show={secondChance} variant="dark">
+          <Alert.Heading>Are You Sure You Want To Cancel The Match Check-In?!</Alert.Heading>
+          <p>We let you Second Chance To Think About It!</p>
+          <hr />
+          <div className="d-flex justify-content-end">
+            <Button onClick={() => updateGameList()} variant="outline-success">I'm Sure!</Button>
+            <Button onClick={() => setSecondChance(false)} variant="outline-success">You Right! I Want To Stay In</Button>
           </div>
         </Alert>
         <button onClick={fetchMyGames}>Show My Games</button>
