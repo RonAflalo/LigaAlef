@@ -7,7 +7,7 @@ import firebase from 'firebase/compat/app';
 
 function Create(){
   var fields;
-  const [game, setGame] = useState({day: "",month: "",year: "",time: "", location:"", minP:"", maxP:"", pitch:"", teams:""});
+  const [game, setGame] = useState({day: "",month: "",year: "",time: "", location:"", minP:0, maxP:0, pitch:"", teamSize: 0});
   const [show, setShow] = useState(false);
   const [Community, setCommunity] = useState({id: "", name:""});
   const [res, setRes] = useState([]);
@@ -48,8 +48,9 @@ function Create(){
       minP: game.minP,
       maxP: game.maxP,
       Pitch: game.pitch,
-      Teams: game.teams,
+      TeamSize: game.teamSize,
       Players: [],
+      Waiting: [],
       Date: {Day: game.day, Month: game.month, Year: game.year},
       Time: game.time,
       Community: {Id: Community.id, Name: Community.name}
@@ -57,6 +58,7 @@ function Create(){
       setShow(true);
       var newGame = db.collection('Community').doc(Community.id);
       newGame.update({ActiveGames: firebase.firestore.FieldValue.arrayUnion(ref.id)});
+      setGame({day: "",month: "",year: "",time: "", location:"", minP:"", maxP:"", pitch:"", teams:""});
     }).catch((err) =>{
       console.log("Error " + err.message);
     })
@@ -104,7 +106,7 @@ function Create(){
             <input type='text' name='pitch' value={game.pitch} onChange={handleChange} placeholder="Pitch" /><br />
             <input type='number' name='minP' value={game.minP} onChange={handleChange} placeholder="Min Players" /><br />
             <input type='number' name='maxP' value={game.maxP} onChange={handleChange} placeholder="Max Players" /><br />
-            <input type='number' name='teams' value={game.teams} onChange={handleChange} placeholder="Number Of Teams" /><br />
+            <input type='number' name='teams' value={game.teamSize} onChange={handleChange} placeholder="Size Of Team" /><br />
             <input type='number' name='day' value={game.day} onChange={handleChange} placeholder="Day" /><br />
             <input type='number' name='month' value={game.month} onChange={handleChange} placeholder="Month" /><br />
             <input type='number' name='year' value={game.year} onChange={handleChange} placeholder="Year" /><br />

@@ -2,20 +2,29 @@ import React, {useEffect, useState} from 'react';
 import "../communities.css";
 import db from '../../games/firebaseStorage';
 import { getUserId } from '../../../Context/AuthContext';
+import Alert from "react-bootstrap/Alert";
 
 const Members = (props) => {
-    var commType = 'Soccer';
+    //var typeString='Grades.Soccer', voteString='Grades.SoccerVotes';
+    const [commType, setCommType] = useState('Soccer');
+    const [show, setShow] = useState(false);
     const [members, setMembers] = useState([]);
     const [voted, setVoted] = useState([]);
     
     useEffect(() => {
         db.collection("Users").doc(getUserId()).get().then((blockDouble) => {
+            setVoted([]);
+            setMembers([]);
+            setShow(Voted);
+            setVoted((prev) => [...prev, getUserId()]);
+
+            getTypeComm();
+            voted.push(getUserId());
+            
             var Voted = blockDouble.data();
             Voted = Voted.Grades;
             Voted = Voted.Voted;
 
-            setVoted([]);
-            setMembers([]);
             db.collection("Community").doc(props.cid).get().then((snapshot)=>{
                 if(snapshot && !Voted){
                     var temp = snapshot.data();
@@ -43,27 +52,72 @@ const Members = (props) => {
             {
                 oldGrade = snapshot.data();
                 oldGrade = oldGrade.Grades;
-                oldGrade = oldGrade.Soccer;
-                var grade = parseFloat(oldGrade) + parseFloat(value);
-                ref.update({"Grades.Soccer": grade});
+
+                switch(commType) {
+                    case 'Soccer':
+                       oldGrade = oldGrade.Soccer;
+                       var grade = parseFloat(oldGrade) + parseFloat(value);
+                       ref.update({'Grades.Soccer': grade});
+                       break;
+                    case 'Basketball':
+                        oldGrade = oldGrade.Basketball;
+                        //typeString = 'Grades.BasketballVotes';
+                        var grade = parseFloat(oldGrade) + parseFloat(value);
+                        ref.update({'Grades.Basketball': grade}); 
+                      break;
+                    case 'Volyball':
+                        oldGrade = oldGrade.Volyball;
+                        //typeString = 'Grades.VolyballVotes';
+                        var grade = parseFloat(oldGrade) + parseFloat(value);
+                        ref.update({'Grades.Volyball': grade}); 
+                      break;
+                    default:
+                      console.log('Error');
+                      break;
+                    }
+                    //var grade = parseFloat(oldGrade) + parseFloat(value);
+                    //ref.update({typeString: grade});
             });
 
         var oldVotes = ref.get().then((snapshot) => 
             {
                 oldVotes = snapshot.data();
                 oldVotes = oldVotes.Grades;
-                oldVotes = oldVotes.SoccerVotes;
+
+                switch(commType) {
+                    case 'Soccer':
+                        oldVotes = oldVotes.SoccerVotes;
+                        oldVotes++;
+                        ref.update({"Grades.SoccerVotes": oldVotes});
+                       break;
+                    case 'Basketball':
+                        oldVotes = oldVotes.BasketballVotes;
+                        //voteString = 'Grades.Basketball'; 
+                        oldVotes++;
+                        ref.update({"Grades.BasketballVotes": oldVotes});
+                      break;
+                    case 'Volyball':
+                        oldVotes = oldVotes.VolyballVotes;
+                        //voteString = 'Grades.Volyball';
+                        oldVotes++;
+                        ref.update({"Grades.VolyballVotes": oldVotes}); 
+                      break;
+                    default:
+                      console.log('Error');
+                      break;
+                    }
+
                 if(value)
                 {
-                    oldVotes++;
-                    ref.update({"Grades.SoccerVotes": oldVotes});
+                    //oldVotes++;
+                    //ref.update({voteString: oldVotes});
                     setVoted((prev) => [...prev, userID]);
                     db.collection("Users").doc(getUserId()).update({"Grades.Voted": true});
                 }
             });
     }
 
-    function checkVoted(user_Id){
+    function disableVotedUsers(user_Id){
         for (const i in voted) {
             if(voted[i] === user_Id)
                 {return true;}
@@ -71,50 +125,31 @@ const Members = (props) => {
         return false;
     }
 
-    const fetchAll = () => (event) =>{
-        event.preventDefault();
-
-        db.collection("Users").doc(getUserId()).get().then((blockDouble) => {
-            var Voted = blockDouble.data();
-            Voted = Voted.Grades;
-            Voted = Voted.Voted;
-
-            setVoted([]);
-            setMembers([]);
-            db.collection("Community").doc(props.cid).get().then((snapshot)=>{
-                if(snapshot && !Voted){
-                    var temp = snapshot.data();
-                    temp = temp.Members;
-                    temp.forEach((member)=>{
-                        db.collection("Users").doc(member).get().then((value) => {
-                            setMembers((prev)=>{
-                                return[...prev,value.data()];
-                            });
-                        });
-                    });
-                }
-            });
-        }); 
-    }
-
-    const getTypeComm = () => (event) => {
-        event.preventDefault();
-        commType = db.collection("Community").doc(props.cid).get();
-
-        console.log("test");
-        console.log(commType);
+    function getTypeComm () {
+            db.collection("Community").doc(props.cid).get().then((snapshot) => {
+            var type = snapshot.data();
+            type = type.Type;
+            setCommType(type);
+        })
     }
 
     return(
         <>
+              <Alert show={show} variant="success">
+                <Alert.Heading>Thanks For Your Votes! </Alert.Heading>
+                <p>See You Againg After Next Game</p>
+                <hr />
+            </Alert>
             <div>
                 {
                     members&&(members.map((member)=>(
                         <>
-                            <option>Name: {member.Name}</option>
-                            <option>Grade: {parseInt(member.Grades.Soccer/member.Grades.SoccerVotes)}</option>
+                            <option key="member.Name">Name: {member.Name}</option>
+                            <option key="member.Grades.Soccer">Soccer Grade: {parseInt(member.Grades.Soccer/member.Grades.SoccerVotes)}</option>
+                            <option key="member.Grades.Basketball">Soccer Grade: {parseInt(member.Grades.Basketball/member.Grades.BasketballVotes)}</option>
+                            <option key="member.Grades.Volyball">Soccer Grade: {parseInt(member.Grades.Volyball/member.Grades.SoccerVotes)}</option>
                             <div>
-                                <select value="" disabled={checkVoted(member.User_ID)} onChange={updateGrade(member.User_ID)}>
+                                <select key="member.User_ID" value="" disabled={disableVotedUsers(member.User_ID)} onChange={updateGrade(member.User_ID)}>
                                     <option value={0}>Rate</option>
                                     <option value={1} key={1}>1</option>
                                     <option value={2} key={2}>2</option>
@@ -126,11 +161,7 @@ const Members = (props) => {
                         </>
                         )
                     ))
-
-
                 }
-                
-
             </div>
         </>
     )
