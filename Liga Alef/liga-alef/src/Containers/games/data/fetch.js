@@ -39,17 +39,6 @@ function Fetch() {
       });
   };
 
-  function GetCommunities() {
-    db.collection("Users")
-      .doc(getUserId())
-      .get()
-      .then((value) => {
-        fields = value.data();
-        fields = fields.Communities;
-        //setArr(fields);
-      });
-  }
-
   function GetGames() {
     db.collection("Community")
       .doc(Community.id)
@@ -71,15 +60,6 @@ function Fetch() {
         var temp = value.data();
         setRes((res) => [...res, temp]);
       });
-  }
-
-  function fetchComm(e) {
-    e.preventDefault();
-    GetCommunities();
-    setRes([]);
-    //for (const i in arr) {
-    //  addToRes(arr[i]);
-    //}
   }
 
   function fetchGames(e) {
