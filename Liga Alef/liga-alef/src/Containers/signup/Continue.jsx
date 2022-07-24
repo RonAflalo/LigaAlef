@@ -19,8 +19,7 @@ const Continue = () => {
                 Basketball: 2.5,
                 BasketballVotes: 0,
                 Vollyball: 2.5,
-                VollyballVotes: 0,
-                Voted: false},
+                VollyballVotes: 0},
       Communities: [],
       User_ID: getUserId()}
       ).then(() => {
