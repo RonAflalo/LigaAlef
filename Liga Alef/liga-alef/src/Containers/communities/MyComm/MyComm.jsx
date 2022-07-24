@@ -32,6 +32,14 @@ const Chat = () => {
             </div>
           </Accordion.Body>
         </Accordion.Item>
+        <Accordion.Item eventKey="3">
+          <Accordion.Header>After Games Rating</Accordion.Header>
+          <Accordion.Body>
+            <div>
+            <Members cid={id}/>
+            </div>
+          </Accordion.Body>
+        </Accordion.Item>
         <Accordion.Item eventKey="1">
           <Accordion.Header>Community Chat</Accordion.Header>
           <Accordion.Body>

@@ -2,6 +2,7 @@ import React from 'react';
 import "../communities.css";
 import db from '../../games/firebaseStorage';
 import { Link } from 'react-router-dom';
+import { Button } from 'bootstrap';
 import { getUserId } from '../../../Context/AuthContext';
 import firebase from "firebase/compat/app";
 
@@ -21,11 +22,6 @@ const CommInfo = (props) => {
     return(
         <>
         <h1>Info + Rules</h1>
-        <Link
-              to="/communities"
-              onClick={leaveComm()}>
-              Leave Community
-            </Link>
         </>
     )
 }
