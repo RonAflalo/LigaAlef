@@ -5,6 +5,7 @@ import Members from "./Members";
 import CommInfo from "./commMain";
 import Accordion from 'react-bootstrap/Accordion';
 import { useLocation } from "react-router-dom";
+import Ranking from "./Ranking";
 
 
 const Chat = () => {
@@ -32,11 +33,11 @@ const Chat = () => {
             </div>
           </Accordion.Body>
         </Accordion.Item>
-        <Accordion.Item eventKey="3">
+        <Accordion.Item eventKey="2">
           <Accordion.Header>After Games Rating</Accordion.Header>
           <Accordion.Body>
             <div>
-            <Members cid={id}/>
+            <Ranking cid={id}/>
             </div>
           </Accordion.Body>
         </Accordion.Item>
