@@ -82,21 +82,29 @@ const FetchMyGame = () => {
         setGameID(gameId);
       }
       else{
-      playersList = snapshot.data();
-      playersList = playersList.Players.length;
-      var maxPlayers = snapshot.data();
-      maxPlayers = maxPlayers.maxP;
-      if(playersList>=maxPlayers)
-      { setWait(true);
-        ref.update({
-          Waiting: firebase.firestore.FieldValue.arrayUnion(getUserId()),
-        });}
-      else
-      { setShow(true);
-        ref.update({
-          Players: firebase.firestore.FieldValue.arrayUnion(getUserId()),
-        });}
-      }
+        playersList = snapshot.data();
+        var waitingList = playersList.Waiting;
+        if(waitingList.find((player)=>player===getUserId())){
+          ref.update({
+            Waiting: firebase.firestore.FieldValue.arrayRemove(getUserId()),
+          });
+        }
+        else{
+          playersList = playersList.Players.length;
+          var maxPlayers = snapshot.data();
+          maxPlayers = maxPlayers.maxP;
+          if(playersList>=maxPlayers)
+          { setWait(true);
+            ref.update({
+              Waiting: firebase.firestore.FieldValue.arrayUnion(getUserId()),
+            });}
+          else
+          { setShow(true);
+            ref.update({
+              Players: firebase.firestore.FieldValue.arrayUnion(getUserId()),
+            });}
+          }
+        }
     })
     setAllDocs([]);
   };
@@ -143,6 +151,12 @@ const FetchMyGame = () => {
             break;
           case 4:
             group4.push(tempPlayer.pop());
+            break;
+          case 5:
+            group5.push(tempPlayer.pop());
+            break;
+          default:
+            group1.push(tempPlayer.pop());
             break;
       }
      }
@@ -237,6 +251,7 @@ const FetchMyGame = () => {
               <option>
                 Players: {doc.Players.length}/{doc.maxP}
               </option>
+              {(doc.Waiting.length>0)&&(<option> There Are {doc.Waiting.length} on the waiting list</option>)}
               <option>Pitch Type: {doc.Pitch}</option>
               <option>
                 Date: {doc.Date.Day}.{doc.Date.Month}.{doc.Date.Year}
@@ -244,8 +259,10 @@ const FetchMyGame = () => {
               <option>Time: {doc.Time}</option>
               <button onClick={gameManage(doc.Gid)} 
                     disabled={(doc.Players.length>=doc.maxP)&&!doc.Players.find((obj)=>obj===getUserId())}>
-                      {doc.Players.find((obj)=>obj===getUserId()) ? 'Cancel': 'Check In'}</button>
-              <button onClick={gameManage(doc.Gid)} disabled={!(doc.Players.length>=doc.maxP)||doc.Players.find((obj)=>obj===getUserId())}>Waiting List</button>
+                      {doc.Players.find((obj)=>obj===getUserId()) ? 'Cancel Check In': 'Check In'}</button>
+              <button onClick={gameManage(doc.Gid)} 
+                    disabled={!(doc.Players.length>=doc.maxP)||doc.Players.find((obj)=>obj===getUserId())}>
+                       {doc.Waiting.find((obj)=>obj===getUserId()) ? 'Cancel Waiting': 'Waiting List'}</button>
               <button>Waze</button>
               <button>Sync</button>
               <button>Weather</button>

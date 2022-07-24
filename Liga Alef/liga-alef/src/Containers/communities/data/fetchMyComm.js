@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { getUserId } from "../../../Context/AuthContext";
 import db from "../../games/firebaseStorage";
 import { Link } from "react-router-dom";
+
 function FetchMyComm() {
-  const [arr, setArr] = useState([]);
   const [res, setRes] = useState([]);
 
   useEffect(() => {
@@ -27,15 +27,6 @@ function FetchMyComm() {
         var temp = value.data();
         setRes((res) => [...res, temp]);
       });
-  }
-
-  function fetchAll(e) {
-    e.preventDefault();
-    //GetCommunities();
-    setRes([]);
-    for (const i in arr) {
-      addToRes(arr[i]);
-    }
   }
 
   return (

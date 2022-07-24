@@ -2,6 +2,7 @@ import React from "react";
 //import "./chat.css";
 import { ChatRoom } from "./chatRoom";
 import Members from "./Members";
+import CommInfo from "./commMain";
 import Accordion from 'react-bootstrap/Accordion';
 import { useLocation } from "react-router-dom";
 
@@ -19,7 +20,7 @@ const Chat = () => {
           <Accordion.Header>Community Info</Accordion.Header>
           <Accordion.Body>
             <div>
-            <h1>info + Rules</h1>
+            <CommInfo cid={id} />
             </div>
           </Accordion.Body>
         </Accordion.Item>

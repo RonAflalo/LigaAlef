@@ -7,6 +7,7 @@ import firebase from "firebase/compat/app";
 
 function Fetch() {
   const [show, setShow] = useState(false);
+  const [leaveComm, setLeave] = useState(false);
   const [allDocs, setAllDocs] = useState([]);
   const [Comm, setComm] = useState({ name: "", id: "", type: "Soccer" });
 
@@ -28,9 +29,6 @@ function Fetch() {
   const fetchFiltered = (e) => {
     e.preventDefault();
     setAllDocs([]);
-
-    console.log(Comm.name);
-    console.log(Comm.type);
 
     var query = db.collection("Community");
     if(Comm.name)
@@ -73,19 +71,45 @@ function Fetch() {
     setComm([]);
   }
 
-  const joinCommunity = (commId) => (event) => {
+  const manageCommunity = (commId) => (event) => {
     event.preventDefault();
     var ref = db.collection("Community").doc(commId);
-    ref.update({
-      Members: firebase.firestore.FieldValue.arrayUnion(getUserId()),
+    ref.get().then((snapshot)=>{
+      var membersList = snapshot.data();
+      membersList=membersList.Members;
+      if(membersList.find((member)=>member===getUserId())){
+        setLeave(true);
+        ref.update({
+          Members: firebase.firestore.FieldValue.arrayRemove(getUserId()),
+        });
+        var Leaver = db.collection("Users").doc(getUserId());
+        Leaver.update({
+          Communities: firebase.firestore.FieldValue.arrayRemove(ref.id),
+        });
+      }
+      else{
+        ref.update({
+          Members: firebase.firestore.FieldValue.arrayUnion(getUserId()),
+        });
+        var creator = db.collection("Users").doc(getUserId());
+        creator.update({
+          Communities: firebase.firestore.FieldValue.arrayUnion(ref.id),
+        });
+        setShow(true);
+        setAllDocs([]);
+      }
     });
-    var creator = db.collection("Users").doc(getUserId());
-    creator.update({
-      Communities: firebase.firestore.FieldValue.arrayUnion(ref.id),
-    });
-    setShow(true);
-    setAllDocs([]);
   };
+
+  function afterJoin(){
+    setShow(false);
+    window.location.reload();
+  }
+
+  function afterLeave(){
+    setLeave(false);
+    window.location.reload();
+  }
 
   return (
     <div>
@@ -94,7 +118,17 @@ function Fetch() {
         <p>Enjoy</p>
         <hr />
         <div className="d-flex justify-content-end">
-          <Button onClick={() => setShow(false)} variant="outline-success">
+          <Button onClick={() => afterJoin()} variant="outline-success">
+            Ok!
+          </Button>
+        </div>
+      </Alert>
+      <Alert show={leaveComm} variant="dark">
+        <Alert.Heading>We Are Sorry To See You Leaving</Alert.Heading>
+        <p>Hope We Get Together Vary Soon</p>
+        <hr />
+        <div className="d-flex justify-content-end">
+          <Button onClick={() => afterLeave()} variant="outline-success">
             Ok!
           </Button>
         </div>
@@ -132,7 +166,8 @@ function Fetch() {
               <option>
                 Members: {doc.Members.length}/{doc.MaxMember}
               </option>
-              <button onClick={joinCommunity(doc.Community_ID)}>Join</button>
+              <button onClick={manageCommunity(doc.Community_ID)} disabled={doc.Members.length>=doc.MaxMember}>
+              {doc.Members.find((obj)=>obj===getUserId()) ? 'Leave': 'Join'}</button>
 
               <br />
               <br />
