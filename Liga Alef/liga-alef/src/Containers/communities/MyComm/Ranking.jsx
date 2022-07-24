@@ -3,44 +3,49 @@ import "../communities.css";
 import db from '../../games/firebaseStorage';
 import { getUserId } from '../../../Context/AuthContext';
 import Alert from "react-bootstrap/Alert";
+import firebase from "firebase/compat/app";
 
 const Ranking = (props) => {
     const [gameLList, setGameList] = useState([]);
     const [commType, setCommType] = useState('Soccer');
     const [show, setShow] = useState(false);
-    const [members, setMembers] = useState([]);
-    const [voted, setVoted] = useState([]);
+    const [players, setPlayers] = useState([]);
+    const [PlayersVoted, setVoted] = useState([]);
+    const [selectedGame, setGame] = useState({id: ''});
     
     useEffect(() => {
-        db.collection("Users").doc(getUserId()).get().then((blockDouble) => {
             setVoted([]);
-            setMembers([]);
-            setShow(Voted);
-            setVoted((prev) => [...prev, getUserId()]);
-
+            setPlayers([]);
             getGamesList();
             getTypeComm();
-            voted.push(getUserId());
-            
-            var Voted = blockDouble.data();
-            Voted = Voted.Grades;
-            Voted = Voted.Voted;
+    }, [])
 
-            db.collection("Community").doc(props.cid).get().then((snapshot)=>{
-                if(snapshot && !Voted){
-                    var temp = snapshot.data();
-                    temp = temp.Members;
-                    temp.forEach((member)=>{
-                        db.collection("Users").doc(member).get().then((value) => {
-                            setMembers((prev)=>{
-                                return[...prev,value.data()];
-                            });
+    const handleSelect = (key) => (event) => {
+        event.preventDefault();
+        setGame({[key]: event.target.value});
+        setPlayers([])
+        setShow(false);
+
+        db.collection("Games").doc(event.target.value).get().then((game)=>{
+                var voated = game.data();
+                voated = voated.Voated;
+                if(voated.find((player)=>player===getUserId())){
+                    setShow(true);
+                }
+                else{
+                setVoted((prev) => [...prev, getUserId()]);
+                var temp = game.data();
+                temp = temp.Players;
+                temp.forEach((player)=>{
+                    db.collection("Users").doc(player).get().then((user) => {
+                        setPlayers((prev)=>{
+                            return[...prev,user.data()];
                         });
                     });
-                }
-            });
-        }); 
-    }, [])
+                });
+            }
+        });
+      };
 
     const updateGrade = (userId) => (event) => {
         getOldGrade(userId, event.target.value);
@@ -107,20 +112,18 @@ const Ranking = (props) => {
                       console.log('Error');
                       break;
                     }
-
-                if(value)
-                {
                     //oldVotes++;
                     //ref.update({voteString: oldVotes});
                     setVoted((prev) => [...prev, userID]);
-                    db.collection("Users").doc(getUserId()).update({"Grades.Voted": true});
-                }
+                    db.collection("Games").doc(selectedGame.id).update({
+                        Voated: firebase.firestore.FieldValue.arrayUnion(getUserId()),
+                      });
             });
     }
 
     function disableVotedUsers(user_Id){
-        for (const i in voted) {
-            if(voted[i] === user_Id)
+        for (const i in PlayersVoted) {
+            if(PlayersVoted[i] === user_Id)
                 {return true;}
         }
         return false;
@@ -150,8 +153,16 @@ const Ranking = (props) => {
                 <hr />
             </Alert>
             <div>
+                    <select value={selectedGame.id} onChange={handleSelect('id')}>
+                    <option value="">Choose Game</option>
+                    {gameLList.map(game => (
+                    <option value={game.Gid} key={game.Gid} disabled={!game.Players.find((obj)=>obj===getUserId())}>Game On {game.Date.Day}.{game.Date.Month}.{game.Date.Year} In {game.Location}</option>
+                    ))}
+                    </select>
+                </div>
+            <div>
                 {
-                    members&&(members.map((member)=>(
+                    players&&(players.map((member)=>(
                         <>
                             <option key="member.Name">Name: {member.Name}</option>
                             <option key="member.Grades.Soccer">Soccer Grade: {parseInt(member.Grades.Soccer/member.Grades.SoccerVotes)}</option>
@@ -169,11 +180,6 @@ const Ranking = (props) => {
                             </div>
                         </>
                         )
-                    ))
-                }
-                {
-                    gameLList.map((game)=>(
-                        <option key="game.Gid">Game ID: {game.Gid}</option>
                     ))
                 }
             </div>
