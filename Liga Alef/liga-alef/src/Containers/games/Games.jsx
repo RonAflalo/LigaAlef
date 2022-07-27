@@ -1,7 +1,7 @@
 import React from "react";
-import Fetch from './data/fetch';
+import Fetch from './data/fetchCommGame';
 import './games.css';
-import Create from "./data/create";
+import Create from "./data/createGame";
 import Accordion from 'react-bootstrap/Accordion';
 import FetchMyGame from "./data/fetchMyGame";
 

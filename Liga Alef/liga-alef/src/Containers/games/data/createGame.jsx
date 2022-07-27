@@ -32,8 +32,8 @@ function Create(){
 
   const handleSelect = (key) => (event) => {
     event.preventDefault();
-  setCommunity({ [key]: event.target.value });
-  db.collection("Community").doc(event.target.value).get().then((value) => {
+    setCommunity({ [key]: event.target.value });
+    db.collection("Community").doc(event.target.value).get().then((value) => {
     fields = value.data();
     setCommunity({id:event.target.value, name:fields.Name});
     })
@@ -51,6 +51,7 @@ function Create(){
       TeamSize: game.teamSize,
       Players: [],
       Waiting: [],
+      Voated: [],
       Date: {Day: game.day, Month: game.month, Year: game.year},
       Time: game.time,
       Community: {Id: Community.id, Name: Community.name}
@@ -113,9 +114,9 @@ function Create(){
             <input type='text' name='time' value={game.time} onChange={handleChange} placeholder="Time - hh:mm" /><br />
             <div>
                 <select value={Community.id} onChange={handleSelect("id")}>
-                <option value="">Choose Community</option>
+                <option value="" key="blank">Choose Community</option>
                 {res.map(option => (
-                  <option value={option.Community_ID} key={option.id}>{option.Name}</option>
+                  <option value={option.Community_ID} key={option.Name}>{option.Name}</option>
                 ))}
               </select>
             </div>

@@ -5,74 +5,93 @@ import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
 import firebase from "firebase/compat/app";
 
-const FetchMyGame = () => {
-  const [allDocs, setAllDocs] = useState([]);
+function FetchCommGame() {
+  const [res, setRes] = useState([]);
+  const [gamesList, setGamesList] = useState([]);
+  const [commId, setCommID] = useState();
   const [show, setShow] = useState(false);
   const [wait, setWait] = useState(false);
   const [problem, setProblem] = useState(false);
   const [secondChance, setSecondChance] = useState(false);
   const [game_ID, setGameID] = useState();
-  const [tempPlayer, setTempPlayer] = useState([]);
   const [players, setPlayers] = useState([]);
 
-  const [group1, setGroup1] = useState([]);
-  const [group2, setGroup2] = useState([]);
-  const [group3, setGroup3] = useState([]);
-  const [group4, setGroup4] = useState([]);
-  const [group5, setGroup5] = useState([]);
-
   useEffect(() => {
-    fetchMyGames();
-  }, [])
-
-  function fetchMyGames() {
-    db.collection("Games")
+    db.collection("Users")
+      .doc(getUserId())
       .get()
-      .then((snapshot) => {
-        if (snapshot.docs.length > 0) {
-          snapshot.docs.forEach((doc) => {
-            var temp = doc.get("Players");
-            if (temp.includes(getUserId())) {
-              setAllDocs((prev) => {
+      .then((value) => {
+        var arr = value.data();
+        arr = arr.Communities;
+        for (const i in arr) {
+          addToRes(arr[i]);
+        }
+        db.collection("Games")
+        .where('Community.Id', '==', arr.pop())
+        .get()
+        .then((snapshot) => {
+          if (snapshot.docs.length > 0) {
+            snapshot.docs.forEach((doc) => {
+              setGamesList((prev) => {
                 return [...prev, doc.data()];
               });
-            }
-          });
-        }
-      });
-  }
-
-  function fetchAll(e) {
-    e.preventDefault();
-
-    clearList(e);
-    db.collection("Games")
-      .get()
-      .then((snapshot) => {
-        if (snapshot.docs.length > 0) {
-          snapshot.docs.forEach((doc) => {
-            setAllDocs((prev) => {
-              return [...prev, doc.data()];
+              var idNum = doc.data();
+              idNum=idNum.Community;
+              setCommID(idNum.Id);
             });
-          });
-        }
+          }
+        });
+        })  
+  }, [])
+
+  function addToRes(item) {
+    db.collection("Community")
+      .doc(item)
+      .get()
+      .then((value) => {
+        var temp = value.data();
+        setRes((res) => [...res, temp]);
       });
   }
 
-  function clearList(e) {
-    e.preventDefault();
-    setAllDocs([]);
+  function updateUserGameList(){
+    var ref = db.collection("Games").doc(game_ID);
+    ref.update({
+      Players: firebase.firestore.FieldValue.arrayRemove(getUserId()),
+    });
+    ref.get().then((snapshot)=>{
+      var waitingList = snapshot.data();
+      waitingList = waitingList.Waiting;
+      if(waitingList.length>0)
+      {
+        ref.update({
+          Waiting: firebase.firestore.FieldValue.arrayRemove(waitingList[0]),
+          Players: firebase.firestore.FieldValue.arrayUnion(waitingList[0]),
+        });
+      }
+    });
+    setSecondChance(false)
+        //sent E-Mail
+  }
+
+  const fetchCommGames = () => (event) => {
+    event.preventDefault();
+
+    setGamesList([]);
     setPlayers([]);
-
-    fetchMyGames();
-
-    setTempPlayer([]);
-
-    setGroup1([]);
-    setGroup2([]);
-    setGroup3([]);
-    setGroup4([]);
-    setGroup5([]);
+    setCommID(event.target.value);
+    db.collection("Games")
+    .where('Community.Id', '==', event.target.value)
+    .get()
+    .then((snapshot) => {
+      if (snapshot.docs.length > 0) {
+        snapshot.docs.forEach((doc) => {
+          setGamesList((prev) => {
+            return [...prev, doc.data()];
+          });
+        });
+      }
+    });
   }
 
   const gameManage = (gameId) => (event) => {
@@ -110,7 +129,7 @@ const FetchMyGame = () => {
           }
         }
     })
-    setAllDocs([]);
+    setGamesList([]);
   };
 
   function updateGameList(){
@@ -133,40 +152,6 @@ const FetchMyGame = () => {
         //sent E-Mail
   }
 
-  function tempFunc()
-  {
-    for (const k in players){
-      tempPlayer.push({name:players[k].Name, id:players[k].User_ID, grade: (players[k].Grades.Soccer/players[k].Grades.SoccerVotes)});
-    }
-    tempPlayer.sort((a,b)=>b.grade-a.grade);
-    while(tempPlayer.length > 0)
-    {
-      for(var i = 1; i <= 4; i++)
-      {
-        switch(i){
-          case 1:
-            group1.push(tempPlayer.pop());
-            break;
-          case 2:
-            group2.push(tempPlayer.pop());
-            break;
-          case 3:
-            group3.push(tempPlayer.pop());
-            break;
-          case 4:
-            group4.push(tempPlayer.pop());
-            break;
-          case 5:
-            group5.push(tempPlayer.pop());
-            break;
-          default:
-            group1.push(tempPlayer.pop());
-            break;
-      }
-     }
-    }
-  }
-
   const gameMembers = (gameId) => (event) => {
     event.preventDefault();
     clearList(event);
@@ -177,7 +162,7 @@ const FetchMyGame = () => {
       .then((snapshot) => {
         if (snapshot) {
           var game = snapshot.data();
-          setAllDocs((allDocs) => [...allDocs, game]);
+          setGamesList((allDocs) => [...allDocs, game]);
           var temp = game.Players;
           temp.forEach((player) => {
             db.collection("Users")
@@ -191,8 +176,13 @@ const FetchMyGame = () => {
           });
         }
       });
-      tempFunc();
   };
+
+  function clearList(e) {
+    e.preventDefault();
+    setGamesList([]);
+    setPlayers([]);
+  }
 
   return (
     <>
@@ -237,14 +227,23 @@ const FetchMyGame = () => {
             <Button onClick={() => setSecondChance(false)} variant="outline-success">You Right! I Want To Stay In</Button>
           </div>
         </Alert>
-        <div>
+        <h5>Choose Community:</h5>
+            {res.map((comm) => (
+              <>
+              <button value={comm.Community_ID} onClick={fetchCommGames()} 
+                disabled={commId===comm.Community_ID}>
+                {comm.Name}
+                </button>
+              </>
+            ))}
+          <div>
           {players.map((player) => (
             <>
               <option>Player Name: {player.Name}</option>
             </>
           ))}
           <br />
-          {allDocs.map((doc) => (
+          {gamesList&&gamesList.map((doc) => (
             <>
               <option>Game Location: {doc.Location}</option>
               <option>Min Players To Play: {doc.minP}</option>
@@ -270,14 +269,10 @@ const FetchMyGame = () => {
               <br />
             </>
           ))}
-          <br /><br />
-          <button onClick={clearList}>Back</button>
-          <button onClick={fetchMyGames}>Temp - Show My Games</button>
-          <button onClick={fetchAll}>Temp -Show All Games</button>
         </div>
       </div>
     </>
   )
 }
 
-export default FetchMyGame;
+export default FetchCommGame;
