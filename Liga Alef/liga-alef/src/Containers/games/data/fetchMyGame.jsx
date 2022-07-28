@@ -1,11 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import db from "../firebaseStorage";
-import { getUserId } from "../../../Context/AuthContext";
+import { getUserId, getUserName } from "../../../Context/AuthContext";
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
 import firebase from "firebase/compat/app";
 
+
+import emailjs from "emailjs-com";
+//import emailjs from '@emailjs/browser';
+
 const FetchMyGame = () => {
+  const form = useRef();
+  const [waitUser, setWaitUser] = useState({name: '', email:''});
   const [allDocs, setAllDocs] = useState([]);
   const [show, setShow] = useState(false);
   const [wait, setWait] = useState(false);
@@ -113,7 +119,9 @@ const FetchMyGame = () => {
     setAllDocs([]);
   };
 
-  function updateGameList(){
+  const updateGameList = (e) => {
+    e.preventDefault();
+
     var ref = db.collection("Games").doc(game_ID);
     ref.update({
       Players: firebase.firestore.FieldValue.arrayRemove(getUserId()),
@@ -127,10 +135,35 @@ const FetchMyGame = () => {
           Waiting: firebase.firestore.FieldValue.arrayRemove(waitingList[0]),
           Players: firebase.firestore.FieldValue.arrayUnion(waitingList[0]),
         });
+
+        //sent E-Mail
+        //form.current.user_name.value=getWaitingEmail(waitingList[0]);
+        //form.current.user_email.value=getWaitingEmail(waitingList[0]);
+        db.collection("Users").doc(waitingList[0]).get().then((obj)=>{
+          var user = obj.data();
+          setWaitUser({name: user.Name, email: user.Email});
+        });
+        form.current.user_name.value = 'User';
+        //form.current.user_name.value = waitUser.name;
+        form.current.user_email.value="Mosheam@mta.ac.il";
+        //form.current.user_email.value=waitUser.email;
+        var gameData = snapshot.data();
+        var commName = snapshot.data();
+        commName = commName.Community;
+        form.current.community.value=commName.Name;
+        gameData = gameData.Date.Day +'/'+gameData.Date.Month+' - '+gameData.Location;
+        form.current.message.value = gameData;
+
+        emailjs.sendForm('LigaAlef_Support', 'WaitingList_oyr0yho', form.current, 'O_-YESL-F2_dMebuX')
+        .then((result) => {
+            console.log(result.text);
+        }, (error) => {
+            console.log(error.text);
+        });
       }
     });
     setSecondChance(false)
-        //sent E-Mail
+    clearList(e);
   }
 
   function tempFunc()
@@ -233,7 +266,13 @@ const FetchMyGame = () => {
           <p>We let you Second Chance To Think About It!</p>
           <hr />
           <div className="d-flex justify-content-end">
-            <Button onClick={() => updateGameList()} variant="outline-success">I'm Sure!</Button>
+          <form ref={form} onSubmit={updateGameList}>
+            <input type="hidden" name="user_name" />
+            <input type="hidden" name="community" />
+            <input type="hidden" name="user_email" />
+            <input type="hidden" name="message" />
+            <input type="submit" value="I'm Sure" />
+          </form>
             <Button onClick={() => setSecondChance(false)} variant="outline-success">You Right! I Want To Stay In</Button>
           </div>
         </Alert>
@@ -274,6 +313,7 @@ const FetchMyGame = () => {
           <button onClick={clearList}>Back</button>
           <button onClick={fetchMyGames}>Temp - Show My Games</button>
           <button onClick={fetchAll}>Temp -Show All Games</button>
+
         </div>
       </div>
     </>
@@ -281,3 +321,4 @@ const FetchMyGame = () => {
 }
 
 export default FetchMyGame;
+
