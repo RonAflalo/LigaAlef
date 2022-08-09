@@ -227,6 +227,23 @@ const FetchMyGame = () => {
       tempFunc();
   };
 
+  async function getWeather(doc){
+    const date = doc.Date.Year + "-" + doc.Date.Month + "-" + doc.Date.Day ;
+    const location = doc.Location + ",IL/";
+    const apiKey = '5HG66BJ3CW2HAE34GRAUEA3G2';
+    const url = 'https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/' + location + date + "?key=" + apiKey;
+    console.log(url);
+    var response = await fetch(url).then(
+      response => response.text() // .json(), .blob(), etc.
+    ).then(
+      text => console.log(text) // Handle here
+    );
+    //var res = response.responseText;
+    
+    //console.log(response);
+   // console.log(res);
+  }
+
   return (
     <>
       <div>
@@ -304,7 +321,7 @@ const FetchMyGame = () => {
                        {doc.Waiting.find((obj)=>obj===getUserId()) ? 'Cancel Waiting': 'Waiting List'}</button>
               <button>Waze</button>
               <button>Sync</button>
-              <button>Weather</button>
+              <button onClick={async () => {await getWeather(doc);}}>Weather</button>
               <button onClick={gameMembers(doc.Gid)}>Grouping</button>
               <br />
             </>

@@ -46,6 +46,13 @@ function Create() {
           creator.update({
             Communities: firebase.firestore.FieldValue.arrayUnion(ref.id),
           });
+
+          var data = {
+            message: "You are now the admin of " + comm.name + ".",
+            time: Date.now(),
+          }        
+          db.collection("Users").doc(getUserId()).collection("Notifications").add({data});
+          
           setShow(true);
           setComm({ name: "", type: "", maxmember: "" });
         })

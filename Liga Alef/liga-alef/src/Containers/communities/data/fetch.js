@@ -10,6 +10,8 @@ function Fetch() {
   const [leaveComm, setLeave] = useState(false);
   const [allDocs, setAllDocs] = useState([]);
   const [Comm, setComm] = useState({ name: "", id: "", type: "Soccer" });
+  var notification;
+  var comName;
 
   const handleChange = (event) => {
     event.preventDefault();
@@ -73,6 +75,7 @@ function Fetch() {
 
   const manageCommunity = (commId) => (event) => {
     event.preventDefault();
+    var msg;
     var ref = db.collection("Community").doc(commId);
     ref.get().then((snapshot)=>{
       var membersList = snapshot.data();
@@ -86,6 +89,7 @@ function Fetch() {
         Leaver.update({
           Communities: firebase.firestore.FieldValue.arrayRemove(ref.id),
         });
+        msg = "You have left ";
       }
       else{
         ref.update({
@@ -97,7 +101,22 @@ function Fetch() {
         });
         setShow(true);
         setAllDocs([]);
+        msg = "You have joined ";
       }
+
+      comName = db.collection("Community").doc(commId).get('Name').then((comName) => {
+        comName = comName.data();
+        console.log(comName.Name);
+        msg = msg + comName.Name;
+        console.log(comName);
+        console.log(msg);
+  
+        const data = {
+          message: msg,
+          time: Date.now(),
+        }        
+        db.collection("Users").doc(getUserId()).collection("Notifications").add({data});
+      });
     });
   };
 

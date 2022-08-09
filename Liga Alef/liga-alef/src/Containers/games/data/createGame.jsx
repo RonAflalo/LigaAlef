@@ -4,6 +4,7 @@ import Alert from 'react-bootstrap/Alert';
 import Button from "react-bootstrap/Button";
 import { getUserId } from "../../../Context/AuthContext";
 import firebase from 'firebase/compat/app';
+import {Autocomplete, usePlacesWidget } from 'react-google-autocomplete';
 
 function Create(){
   const [errorMessage, setErrorMessage] = useState();
@@ -92,6 +93,19 @@ function Create(){
       })
   }
 
+  const { ref } = usePlacesWidget({
+    apiKey: 'AIzaSyCj3v9NUt16wYNDuHCin0qL1Eln5Ig_23o',
+    onPlaceSelected: (place) => {
+      console.log(place);
+    },
+    options: {
+      types: ["(regions)"],
+      componentRestrictions: { country: "il" },
+    },
+  });
+
+   
+
     return(
         <>
         <Alert show={show} variant="success">
@@ -106,7 +120,7 @@ function Create(){
         <h1>Game Data</h1>
         {<label>{errorMessage}</label>}
         <form onSubmit={addDoc}>
-            <input type='text' name='location' value={game.location} onChange={handleChange} placeholder="Location" /><br />
+            <input type='text' name='location' value={game.location} ref={ref} onChange={handleChange} placeholder="Location" /><br />
             <input type='text' name='pitch' value={game.pitch} onChange={handleChange} placeholder="Pitch - Grass/Sand/Hard/Inside" /><br />
             <input type='number' name='minP' value={game.minP} onChange={handleChange} placeholder="Min Players" /><br />
             <input type='number' name='maxP' value={game.maxP} onChange={handleChange} placeholder="Max Players" /><br />
