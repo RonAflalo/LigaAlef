@@ -92,18 +92,22 @@ function Create(){
           setRes(res => [...res, temp]);
       })
   }
-
   const { ref } = usePlacesWidget({
     apiKey: 'AIzaSyCj3v9NUt16wYNDuHCin0qL1Eln5Ig_23o',
+    onPlaceSelected: (place) => console.log(place)
+  })
+  /*
+  const { ref } = usePlacesWidget({
+    apiKey: ,
     onPlaceSelected: (place) => {
       console.log(place);
     },
     options: {
-      types: ["(regions)"],
+      types: ["(places)"],
       componentRestrictions: { country: "il" },
     },
   });
-
+*/
    
 
     return(
@@ -120,7 +124,7 @@ function Create(){
         <h1>Game Data</h1>
         {<label>{errorMessage}</label>}
         <form onSubmit={addDoc}>
-            <div ref ={ref}> <input type='text' name='location' value={game.location}  onChange={handleChange} placeholder="Location" /><br /></div>
+            <input type='text' name='location' value={game.location} onChange={handleChange} placeholder="Location" /><br />
             <input type='text' name='pitch' value={game.pitch} onChange={handleChange} placeholder="Pitch - Grass/Sand/Hard/Inside" /><br />
             <input type='number' name='minP' value={game.minP} onChange={handleChange} placeholder="Min Players" /><br />
             <input type='number' name='maxP' value={game.maxP} onChange={handleChange} placeholder="Max Players" /><br />
