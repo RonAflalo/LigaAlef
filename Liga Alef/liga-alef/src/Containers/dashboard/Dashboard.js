@@ -6,8 +6,9 @@ import db from "../games/firebaseStorage";
 import ListGroup from 'react-bootstrap/ListGroup';
 
 export default function Dashboard() {
+  const [content, setContent] = useState([]);
   const [error, setError] = useState("")
-  const [notification, setNotification] = useState();
+  const [notification, setNotification] = useState([]);
   const { currentUser, logout } = useAuth()
   const navigate = useNavigate()
   async function handleLogout() {
@@ -25,7 +26,6 @@ export default function Dashboard() {
   // notifications
 
   async function getAllNotifications() {
-    const content = []; 
     const notificationsRef = db.collection("Users").doc(getUserId()).collection('Notifications');
     const snapshot = await notificationsRef.get();
     if (snapshot.empty) {
@@ -34,8 +34,13 @@ export default function Dashboard() {
     }  
     
     snapshot.forEach(doc => {
+      var temp = doc.data();
+      temp = temp.data;
+      console.log(temp);
      //console.log(doc.id, '=>', doc.data());
-      content[doc.id] = doc.data();
+      setContent((prev) => {
+        return [...prev, temp];
+      });
        // console.log(content);
     });
     return content;
@@ -53,6 +58,7 @@ export default function Dashboard() {
     };
     getNotification(); 
 }, []);
+
 if (!notification){
     console.log("wait"); 
 }else{
@@ -67,6 +73,10 @@ if (!notification){
           <h2 className="text-center mb-4">Profile</h2>
           {error && <Alert variant="danger">{error}</Alert>}
           <strong>Email:</strong> {currentUser.email}
+          {content.map((note) => (
+          <option>Note: {note.message}</option>
+          ))}
+
           <Link to="/update-profile" className="btn btn-primary w-100 mt-3">
             Update Profile
           </Link>
