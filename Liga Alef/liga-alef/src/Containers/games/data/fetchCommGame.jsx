@@ -184,6 +184,27 @@ function FetchCommGame() {
     setPlayers([]);
   }
 
+  async function getWeather(doc){
+    const date = doc.Date.Year + "-" + doc.Date.Month + "-" + doc.Date.Day ;
+    const location = doc.Location + ",IL/";
+    const apiKey = '5HG66BJ3CW2HAE34GRAUEA3G2';
+    const url = 'https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/' + location + date + "?key=" + apiKey;
+    console.log(url);
+    var response = await fetch(url).then(
+      response => response.json()
+    ).then(
+      json => {console.log(Object.keys(json));
+      
+      alert(json.days[0].description);
+    }
+    );
+  }
+
+  function showInMapClicked(doc) {
+    const location = doc.Location;
+    window.open("https://www.google.com/maps/place/"+location);
+  }
+
   return (
     <>
       <div>
@@ -262,9 +283,9 @@ function FetchCommGame() {
               <button onClick={gameManage(doc.Gid)} 
                     disabled={!(doc.Players.length>=doc.maxP)||doc.Players.find((obj)=>obj===getUserId())}>
                        {doc.Waiting.find((obj)=>obj===getUserId()) ? 'Cancel Waiting': 'Waiting List'}</button>
-              <button>Waze</button>
+              <button onClick={async() => showInMapClicked(doc)}>Open in maps</button>
               <button>Sync</button>
-              <button>Weather</button>
+              <button onClick={async () => {await getWeather(doc);}}>Weather</button>
               <button onClick={gameMembers(doc.Gid)}>Grouping</button>
               <br />
             </>
