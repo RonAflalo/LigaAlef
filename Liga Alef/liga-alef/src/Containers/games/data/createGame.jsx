@@ -120,7 +120,7 @@ function Create(){
         <h1>Game Data</h1>
         {<label>{errorMessage}</label>}
         <form onSubmit={addDoc}>
-            <input type='text' name='location' value={game.location} ref={ref} onChange={handleChange} placeholder="Location" /><br />
+            <div ref ={ref}> <input type='text' name='location' value={game.location}  onChange={handleChange} placeholder="Location" /><br /></div>
             <input type='text' name='pitch' value={game.pitch} onChange={handleChange} placeholder="Pitch - Grass/Sand/Hard/Inside" /><br />
             <input type='number' name='minP' value={game.minP} onChange={handleChange} placeholder="Min Players" /><br />
             <input type='number' name='maxP' value={game.maxP} onChange={handleChange} placeholder="Max Players" /><br />

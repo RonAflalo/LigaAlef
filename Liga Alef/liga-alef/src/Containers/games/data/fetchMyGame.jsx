@@ -234,9 +234,12 @@ const FetchMyGame = () => {
     const url = 'https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/' + location + date + "?key=" + apiKey;
     console.log(url);
     var response = await fetch(url).then(
-      response => response.text() // .json(), .blob(), etc.
+      response => response.json() // .json(), .blob(), etc.
     ).then(
-      text => console.log(text) // Handle here
+      json => {console.log(Object.keys(json)); // Handle here
+      
+      alert(json.days[0].description);
+    }
     );
     //var res = response.responseText;
     
