@@ -124,15 +124,15 @@ function Create(){
         <h1>Game Data</h1>
         {<label>{errorMessage}</label>}
         <form onSubmit={addDoc}>
-            <input type='text' name='location' value={game.location} onChange={handleChange} placeholder="Location" /><br />
-            <input type='text' name='pitch' value={game.pitch} onChange={handleChange} placeholder="Pitch - Grass/Sand/Hard/Inside" /><br />
-            <input type='number' name='minP' value={game.minP} onChange={handleChange} placeholder="Min Players" /><br />
-            <input type='number' name='maxP' value={game.maxP} onChange={handleChange} placeholder="Max Players" /><br />
-            <input type='number' name='teamSize' value={game.teamSize} onChange={handleChange} placeholder="Size Of Team" /><br />
-            <input type='number' name='day' value={game.day} onChange={handleChange} placeholder="Day" /><br />
-            <input type='number' name='month' value={game.month} onChange={handleChange} placeholder="Month" /><br />
-            <input type='number' name='year' value={game.year} onChange={handleChange} placeholder="Year" /><br />
-            <input type='text' name='time' value={game.time} onChange={handleChange} placeholder="Time - hh:mm" /><br />
+            <label>Location</label><input type='text' name='location' value={game.location} onChange={handleChange} placeholder="City" /><br />
+            <label>Pitch</label><input type='text' name='pitch' value={game.pitch} onChange={handleChange} placeholder="Grass/Sand/Hard/Inside" /><br />
+            <label>Min Players</label><input type='number' name='minP' value={game.minP} onChange={handleChange}/><br />
+            <label>Max Players</label><input type='number' name='maxP' value={game.maxP} onChange={handleChange} /><br />
+            <label>Size Of Team</label><input type='number' name='teamSize' value={game.teamSize} onChange={handleChange} /><br />
+            <label>Day</label><input type='number' name='day' value={game.day} onChange={handleChange}/><br />
+            <label>Month</label><input type='number' name='month' value={game.month} onChange={handleChange}/><br />
+            <label>Year</label><input type='number' name='year' value={game.year} onChange={handleChange} /><br />
+            <label>Time</label><input type='text' name='time' value={game.time} onChange={handleChange} placeholder="hh:mm" /><br />
             <div>
                 <select value={Community.id} onChange={handleSelect("id")}>
                 <option value="" key="blank">Choose Community</option>

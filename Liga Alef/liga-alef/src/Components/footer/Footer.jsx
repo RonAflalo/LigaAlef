@@ -10,7 +10,7 @@ const Footer = () => (
         <img src={logo} alt="logo" />
       </div>
       <div className="pz__footer-links_div">
-        <h4>Comming Soon</h4>
+        <p>Comming Soon</p>
         <p>Social Media</p>
         <p>Contact Us</p>
       </div>
@@ -20,10 +20,9 @@ const Footer = () => (
         <p>Contact Us</p>
       </div>
       <div className="pz__footer-links_div">
-        <h4>Get in touch</h4>
+        <p><bold>Get in touch</bold></p>
         <p>Rabenu Yeruham St. 2,</p>
-        <p>Tel-Aviv Yaffo,</p>
-        <p>Israel</p>
+        <p>Tel-Aviv Yaffo, Israel</p>
       </div>
     </div>
 

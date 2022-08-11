@@ -3,10 +3,8 @@ import { Card, Button, Alert } from "react-bootstrap"
 import { getUserId, getUserName, useAuth } from "../../Context/AuthContext"
 import { Link, useNavigate } from "react-router-dom"
 import db from "../games/firebaseStorage";
-import ListGroup from 'react-bootstrap/ListGroup';
 
 export default function Dashboard() {
-  const [numOfNotes, setNumOfNotes] = useState(0);
   const [showNotes, setShowNotes] = useState(false);
   const [content, setContent] = useState([]);
   const [error, setError] = useState("")
@@ -34,8 +32,8 @@ export default function Dashboard() {
       console.log('No matching documents.');
       return;
     }  
-    
-    setContent([])
+    setContent([]);
+
     snapshot.forEach(doc => {
       var temp = doc.data();
       temp = temp.data;
@@ -48,10 +46,9 @@ export default function Dashboard() {
     });
     return content;
   }
-  
-
 
   useEffect(() => {
+
     const getNotification = async () => {
         try {
             const getNotification = await getAllNotifications();
@@ -69,14 +66,16 @@ if (!notification){
     console.log(notification);
 }
 
-function showNotesList(){
-
-}
-
   //
   return (
-    <>
-      <Card className="w-25">
+    <div style={{
+      verticalAlign: "middle",
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      }}>
+      <br /><br /><br />
+      <Card className="w-33" >
         <Card.Body>
           <h2 className="text-center mb-4">Profile</h2>
           {error && <Alert variant="danger">{error}</Alert>}
@@ -102,7 +101,7 @@ function showNotesList(){
         </Card.Body>
 
       </Card>
-    </>
+    </div>
   )
 }
 

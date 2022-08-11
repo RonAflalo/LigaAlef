@@ -10,7 +10,7 @@ import emailjs from "emailjs-com";
 //import emailjs from '@emailjs/browser';
 
 const FetchMyGame = () => {
-  const form = useRef();
+  const formEmail = useRef();
   const [waitUser, setWaitUser] = useState({name: '', email:''});
   const [allDocs, setAllDocs] = useState([]);
   const [show, setShow] = useState(false);
@@ -26,6 +26,9 @@ const FetchMyGame = () => {
   const [group3, setGroup3] = useState([]);
   const [group4, setGroup4] = useState([]);
   const [group5, setGroup5] = useState([]);
+
+  const [teamSize, setTeamSize] = useState();
+  const [maxPlayers, setMaxPlayers] = useState();
 
   useEffect(() => {
     fetchMyGames();
@@ -170,7 +173,7 @@ const FetchMyGame = () => {
           Players: firebase.firestore.FieldValue.arrayUnion(waitingList[0]),
         });
 
-      msg2 = "A מew spot available in " + comname + "'s game at "  + location + " on " + time+". You've been singed up!"
+      msg2 = "A new spot available in " + comname + "'s game at "  + location + " on " + time+". You've been singed up!"
       const data = {
         message: msg2,
         time: Date.now(),
@@ -184,18 +187,20 @@ const FetchMyGame = () => {
           var user = obj.data();
           setWaitUser({name: user.Name, email: user.Email});
         });
-        form.current.user_name.value = 'User';
+        formEmail.current.user_name.value = 'User';
         //form.current.user_name.value = waitUser.name;
-        form.current.user_email.value="Mosheam@mta.ac.il";
+        formEmail.current.user_email.value="Mosheam@mta.ac.il";
         //form.current.user_email.value=waitUser.email;
         var gameData = snapshot.data();
         var commName = snapshot.data();
         commName = commName.Community;
-        form.current.community.value=commName.Name;
+        formEmail.current.community.value=commName.Name;
         gameData = gameData.Date.Day +'/'+gameData.Date.Month+' - '+gameData.Location;
-        form.current.message.value = gameData;
+        formEmail.current.message.value = gameData;
 
-        emailjs.sendForm('LigaAlef_Support', 'WaitingList_oyr0yho', form.current, 'O_-YESL-F2_dMebuX')
+        console.log("hello");
+
+        emailjs.sendForm('LigaAlef_Support', 'WaitingList_oyr0yho', formEmail.current, 'O_-YESL-F2_dMebuX')
         .then((result) => {
             console.log(result.text);
         }, (error) => {
@@ -207,37 +212,75 @@ const FetchMyGame = () => {
     clearList(e);
   }
 
-  function tempFunc()
+  function tempFunc(gameId)
   {
+    var ref = db.collection("Games").doc(gameId);
+
+    ref.get().then((snapshot)=>{
+      var game = snapshot.data();
+      setMaxPlayers(game.maxP);
+      setTeamSize(game.TeamSize);
+      })
+      
     for (const k in players){
       tempPlayer.push({name:players[k].Name, id:players[k].User_ID, grade: (players[k].Grades.Soccer/players[k].Grades.SoccerVotes)});
     }
-    tempPlayer.sort((a,b)=>b.grade-a.grade);
+    tempPlayer.sort((a,b)=>a.grade-b.grade);
+    var back = false;
     while(tempPlayer.length > 0)
     {
-      for(var i = 1; i <= 4; i++)
-      {
-        switch(i){
-          case 1:
-            group1.push(tempPlayer.pop());
-            break;
-          case 2:
-            group2.push(tempPlayer.pop());
-            break;
-          case 3:
-            group3.push(tempPlayer.pop());
-            break;
-          case 4:
-            group4.push(tempPlayer.pop());
-            break;
-          case 5:
-            group5.push(tempPlayer.pop());
-            break;
-          default:
-            group1.push(tempPlayer.pop());
-            break;
+      if (!back){
+        for(var i = 1; i <= (maxPlayers/teamSize); i++)
+        {
+          switch(i){
+            case 1:
+              group1.push(tempPlayer.pop());
+              break;
+            case 2:
+              group2.push(tempPlayer.pop());
+              break;
+            case 3:
+              group3.push(tempPlayer.pop());
+              break;
+            case 4:
+              group4.push(tempPlayer.pop());
+              break;
+            case 5:
+              group5.push(tempPlayer.pop());
+              break;
+            default:
+              group1.push(tempPlayer.pop());
+              break;
+        }
+        back = true;
+       }
       }
-     }
+      else{
+        for(var i = 6-(maxPlayers/teamSize); i <= 5; i++)
+        {
+          switch(i){
+            case 1:
+              group5.push(tempPlayer.pop());
+              break;
+            case 2:
+              group4.push(tempPlayer.pop());
+              break;
+            case 3:
+              group3.push(tempPlayer.pop());
+              break;
+            case 4:
+              group2.push(tempPlayer.pop());
+              break;
+            case 5:
+              group1.push(tempPlayer.pop());
+              break;
+            default:
+              group1.push(tempPlayer.pop());
+              break;
+        }
+        back = false;
+       }
+      }
     }
   }
 
@@ -266,7 +309,7 @@ const FetchMyGame = () => {
           });
         }
       });
-      tempFunc();
+      tempFunc(gameId);
   };
 
   async function getWeather(doc){
@@ -329,8 +372,8 @@ const FetchMyGame = () => {
           <p>We let you Second Chance To Think About It!</p>
           <hr />
           <div className="d-flex justify-content-end">
-          <form ref={form} onSubmit={updateGameList}>
-            <input type="hidden" name="user_name" />
+          <form ref={formEmail} onSubmit={updateGameList}>
+            <input type="hidden" name="user_name"/>
             <input type="hidden" name="community" />
             <input type="hidden" name="user_email" />
             <input type="hidden" name="message" />
@@ -340,12 +383,36 @@ const FetchMyGame = () => {
           </div>
         </Alert>
         <div>
-          {players.map((player) => (
+          {group1.map((player) => (
             <>
-              <option>Player Name: {player.Name}</option>
+              <option>Group 1 Player Name: {(player ? player.name : 'None')} {(player ? parseInt(player.grade) : '0')}</option>
             </>
           ))}
-          <br />
+          {group1.length>0 ? <br /> : ''}
+          {group2.map((player) => (
+            <>
+              <option>Group 2 Player Name: {(player ? player.name : 'None')} {(player ? parseInt(player.grade) : '0')}</option>
+            </>
+          ))}
+          {group2.length>0 ? <br /> : ''}
+          {group3.map((player) => (
+            <>
+              <option>Group 3 Player Name: {(player ? player.name : 'None')} {(player ? parseInt(player.grade) : '0')}</option>
+            </>
+          ))}
+          {group3.length>0 ? <br /> : ''}
+          {group4.map((player) => (
+            <>
+              <option>Group 4 Player Name: {(player ? player.name : 'None')} {(player ? parseInt(player.grade) : '0')}</option>
+            </>
+          ))}
+          {group4.length>0 ? <br /> : ''}
+          {group5.map((player) => (
+            <>
+              <option>Group 4 Player Name: {(player ? player.name : 'None')} {(player ? parseInt(player.grade) : '0')}</option>
+            </>
+          ))}
+          {group5.length>0 ? <br /> : ''}
           {allDocs.map((doc) => (
             <>
               <option>Game Location: {doc.Location}</option>
@@ -374,8 +441,6 @@ const FetchMyGame = () => {
           ))}
           <br /><br />
           <button onClick={clearList}>Back</button>
-          <button onClick={fetchMyGames}>Temp - Show My Games</button>
-          <button onClick={fetchAll}>Temp -Show All Games</button>
 
         </div>
       </div>
