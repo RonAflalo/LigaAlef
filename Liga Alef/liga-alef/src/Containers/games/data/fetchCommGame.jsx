@@ -156,19 +156,39 @@ console.log(msg);
   };
 
   function updateGameList(){
+    var msg1;
+    var msg2;
     var ref = db.collection("Games").doc(game_ID);
     ref.update({
       Players: firebase.firestore.FieldValue.arrayRemove(getUserId()),
     });
     ref.get().then((snapshot)=>{
-      var waitingList = snapshot.data();
-      waitingList = waitingList.Waiting;
+      var game = snapshot.data();
+      var comname = game.Community.Name;
+      var location = game.Location;
+      var time = game.Date.Day + "." + game.Date.Month + "." + game.Date.Year + " " + game.Time
+      msg1 = "You have cancelled registration for " + comname + "'s game at "  + location + " on " + time;
+
+      const data = {
+        message: msg1,
+        time: Date.now(),
+      }        
+      db.collection("Users").doc(getUserId()).collection("Notifications").add({data});
+
+      var waitingList = game.Waiting;
       if(waitingList.length>0)
       {
         ref.update({
           Waiting: firebase.firestore.FieldValue.arrayRemove(waitingList[0]),
           Players: firebase.firestore.FieldValue.arrayUnion(waitingList[0]),
         });
+
+      msg2 = "A מew spot available in " + comname + "'s game at "  + location + " on " + time+". You've been singed up!"
+      const data = {
+        message: msg2,
+        time: Date.now(),
+      }        
+      db.collection("Users").doc(waitingList[0]).collection("Notifications").add({data});
       }
     });
     setSecondChance(false)
