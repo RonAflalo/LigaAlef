@@ -32,6 +32,7 @@ const FetchMyGame = () => {
   }, [])
 
   function fetchMyGames() {
+    setSecondChance(false);
     db.collection("Games")
       .get()
       .then((snapshot) => {
@@ -223,7 +224,8 @@ const FetchMyGame = () => {
 
   const gameMembers = (gameId) => (event) => {
     event.preventDefault();
-    clearList(event);
+    setAllDocs([]);
+    setPlayers([]);
 
     db.collection("Games")
       .doc(gameId)
@@ -315,7 +317,7 @@ const FetchMyGame = () => {
             <input type="hidden" name="message" />
             <input type="submit" value="I'm Sure" />
           </form>
-            <Button onClick={() => setSecondChance(false)} variant="outline-success">You Right! I Want To Stay In</Button>
+            <Button onClick={() => fetchMyGames()} variant="outline-success">You Right! I Want To Stay In</Button>
           </div>
         </Alert>
         <div>
