@@ -92,12 +92,15 @@ const FetchMyGame = () => {
         setGameID(gameId);
       }
       else{
+        var msg;
         playersList = snapshot.data();
         var waitingList = playersList.Waiting;
         if(waitingList.find((player)=>player===getUserId())){
           ref.update({
             Waiting: firebase.firestore.FieldValue.arrayRemove(getUserId()),
           });
+          
+          msg = "You have cancelled waiting for ";
         }
         else{
           playersList = playersList.Players.length;
@@ -107,13 +110,31 @@ const FetchMyGame = () => {
           { setWait(true);
             ref.update({
               Waiting: firebase.firestore.FieldValue.arrayUnion(getUserId()),
-            });}
+            });
+          
+            msg = "You are on waiting list for ";
+          }
           else
           { setShow(true);
             ref.update({
               Players: firebase.firestore.FieldValue.arrayUnion(getUserId()),
-            });}
+            });
+          
+            msg = "You are participating in ";
           }
+          }
+
+          var game = snapshot.data();
+          var comname = game.Community.Name;
+          var location = game.Location;
+          var time = game.Date.Day + "." + game.Date.Month + "." + game.Date.Year + " " + game.Time
+          msg = msg + comname + "'s game at "  + location + " on " + time;
+          
+          const data = {
+            message: msg,
+            time: Date.now(),
+          }        
+          db.collection("Users").doc(getUserId()).collection("Notifications").add({data});
         }
     })
     setAllDocs([]);

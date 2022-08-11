@@ -95,6 +95,7 @@ function FetchCommGame() {
   }
 
   const gameManage = (gameId) => (event) => {
+    var msg
     event.preventDefault();
     var ref = db.collection("Games").doc(gameId);
     ref.get().then((snapshot)=>{
@@ -111,6 +112,8 @@ function FetchCommGame() {
           ref.update({
             Waiting: firebase.firestore.FieldValue.arrayRemove(getUserId()),
           });
+
+          msg = "You have cancelled waiting for ";
         }
         else{
           playersList = playersList.Players.length;
@@ -120,13 +123,33 @@ function FetchCommGame() {
           { setWait(true);
             ref.update({
               Waiting: firebase.firestore.FieldValue.arrayUnion(getUserId()),
-            });}
+            });
+          
+            msg = "You are on waiting list for ";
+          }
           else
           { setShow(true);
             ref.update({
               Players: firebase.firestore.FieldValue.arrayUnion(getUserId()),
-            });}
+            });
+          
+            msg = "You are participating in ";
           }
+          }
+console.log(msg);
+          var game = snapshot.data();
+          var comname = game.Community.Name;
+          var location = game.Location;
+          var time = game.Date.Day + "." + game.Date.Month + "." + game.Date.Year + " " + game.Time
+          msg = msg + comname + "'s game at "  + location + " on " + time;
+          console.log(msg);
+          const data = {
+            message: msg,
+            time: Date.now(),
+          }        
+          console.log(data);
+          db.collection("Users").doc(getUserId()).collection("Notifications").add({data});
+
         }
     })
     setGamesList([]);
