@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react"
 import { Card, Button, Alert } from "react-bootstrap"
-import { getUserId, useAuth } from "../../Context/AuthContext"
+import { getUserId, getUserName, useAuth } from "../../Context/AuthContext"
 import { Link, useNavigate } from "react-router-dom"
 import db from "../games/firebaseStorage";
 import ListGroup from 'react-bootstrap/ListGroup';
 
 export default function Dashboard() {
+  const [numOfNotes, setNumOfNotes] = useState(0);
+  const [showNotes, setShowNotes] = useState(false);
   const [content, setContent] = useState([]);
   const [error, setError] = useState("")
   const [notification, setNotification] = useState([]);
@@ -33,6 +35,7 @@ export default function Dashboard() {
       return;
     }  
     
+    setContent([])
     snapshot.forEach(doc => {
       var temp = doc.data();
       temp = temp.data;
@@ -46,6 +49,7 @@ export default function Dashboard() {
     return content;
   }
   
+
 
   useEffect(() => {
     const getNotification = async () => {
@@ -65,6 +69,10 @@ if (!notification){
     console.log(notification);
 }
 
+function showNotesList(){
+
+}
+
   //
   return (
     <>
@@ -72,21 +80,28 @@ if (!notification){
         <Card.Body>
           <h2 className="text-center mb-4">Profile</h2>
           {error && <Alert variant="danger">{error}</Alert>}
+          <strong>User Name:</strong> {getUserName()}
+          <br />
           <strong>Email:</strong> {currentUser.email}
-          {content.map((note) => (
+          <br /><br />
+          {(notification.length > 0 ? "Hey! You Have " + notification.length + " New Notification's" : 'There Is No Any Notification For You!')}
+          <Button variant="primary" className="w-100 mt-3" 
+                onClick={() => (showNotes ? setShowNotes(false) : setShowNotes(true))} 
+                      disabled={!(notification.length>0)}>{showNotes ? 'Close' : 'Show Me'}</Button>
+          <br /><br /><br />
+          {showNotes&&content.map((note) => (
           <option>Note: {note.message}</option>
           ))}
 
-          <Link to="/update-profile" className="btn btn-primary w-100 mt-3">
+          <Link to="/update-profile" className="btn btn-secondary w-100 mt-3">
             Update Profile
           </Link>
-        </Card.Body>
-      </Card>
-      <div className="w-25 text-center mt-2">
-        <Button variant="link" onClick={handleLogout}>
+          <Button variant="danger" className="w-100 mt-3" onClick={handleLogout}>
           Log Out
         </Button>
-      </div>
+        </Card.Body>
+
+      </Card>
     </>
   )
 }
