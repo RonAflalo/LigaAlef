@@ -25,6 +25,7 @@ export default function Dashboard() {
 
   // notifications
 
+
   async function getAllNotifications() {
     const notificationsRef = db.collection("Users").doc(getUserId()).collection('Notifications');
     const snapshot = await notificationsRef.get();
@@ -65,6 +66,7 @@ if (!notification){
 }else{
     console.log(notification);
 }
+
 
   //
   return (

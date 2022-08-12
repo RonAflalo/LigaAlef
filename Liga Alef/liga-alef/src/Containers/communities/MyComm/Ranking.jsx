@@ -165,9 +165,9 @@ const Ranking = (props) => {
                     players&&(players.map((member)=>(
                         <>
                             <option key="member.Name">Name: {member.Name}</option>
-                            <option key="member.Grades.Soccer">Soccer Grade: {parseInt(member.Grades.Soccer/member.Grades.SoccerVotes)}</option>
-                            <option key="member.Grades.Basketball">BasketBall Grade: {parseInt(member.Grades.Basketball/member.Grades.BasketballVotes)}</option>
-                            <option key="member.Grades.Volyball">VolyBall Grade: {parseInt(member.Grades.Volyball/member.Grades.SoccerVotes)}</option>
+                            <option key="member.Grades.Soccer"> {parseInt(member.Grades.Soccer/member.Grades.SoccerVotes)}</option>
+                            {(member.Grades.Basketball/member.Grades.BasketballVotes) ? <option key="member.Grades.Basketball">BasketBall Grade: {parseInt(member.Grades.Basketball/member.Grades.BasketballVotes)}</option> : ''}
+                            {(member.Grades.Volyball/member.Grades.SoccerVotes) ? <option key="member.Grades.Volyball">VolyBall Grade: {parseInt(member.Grades.Volyball/member.Grades.SoccerVotes)}</option> : ''}
                             <div>
                                 <select key="member.User_ID" value="" disabled={disableVotedUsers(member.User_ID)} onChange={updateGrade(member.User_ID)}>
                                     <option value={0}>Rate</option>
