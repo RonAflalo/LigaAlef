@@ -32,17 +32,17 @@ function FetchMyComm() {
   return (
     <div>
       <div>
-        {res.map((option) => (
-          <>
-            <option value={option.Name}>{option.Name}</option>
-            <Link
-              to="/my-comm"
-              state={{ name: option.Name, id: option.Community_ID }}>
-              Community Page
-            </Link>
-            <br /><br />
-          </>
-        ))}
+        {res.map((comm) => (
+              <>
+              <button value={comm.Name} onClick={''}>
+                <Link
+                to="/my-comm"
+                state={{ name: comm.Name, id: comm.Community_ID }}>
+                {comm.Name}
+                </Link>
+                </button>
+              </>
+            ))}
       </div>
     </div>
   );

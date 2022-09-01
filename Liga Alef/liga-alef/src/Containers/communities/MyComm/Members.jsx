@@ -26,15 +26,29 @@ const Members = (props) => {
     return(
         <>
             <div>
+            <table><tr>
                 {
                     members&&(members.map((member)=>(
-                        <>
-                            <option key="member.Name">Member Name: {member.Name}</option>
-                            <br />
+                        <><td>
+                            Community Member
+                        </td>
                         </>
                         )
                     ))
                 }
+            </tr>
+                <tr>
+                {
+                    members&&(members.map((member)=>(
+                        <><td>
+                            <option key="member.Name">{member.Name}</option>
+                            <br />
+                            </td>
+                        </>
+                        )
+                    ))
+                }
+            </tr></table>
             </div>
         </>
     )

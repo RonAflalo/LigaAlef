@@ -15,6 +15,8 @@ function FetchCommGame() {
   const [secondChance, setSecondChance] = useState(false);
   const [game_ID, setGameID] = useState();
   const [players, setPlayers] = useState([]);
+  const [currentGameId, setCurrentGameID] = useState();
+  const [currentGame, setCurrentGame] = useState([]);
 
   useEffect(() => {
     db.collection("Users")
@@ -52,26 +54,6 @@ function FetchCommGame() {
         var temp = value.data();
         setRes((res) => [...res, temp]);
       });
-  }
-
-  function updateUserGameList(){
-    var ref = db.collection("Games").doc(game_ID);
-    ref.update({
-      Players: firebase.firestore.FieldValue.arrayRemove(getUserId()),
-    });
-    ref.get().then((snapshot)=>{
-      var waitingList = snapshot.data();
-      waitingList = waitingList.Waiting;
-      if(waitingList.length>0)
-      {
-        ref.update({
-          Waiting: firebase.firestore.FieldValue.arrayRemove(waitingList[0]),
-          Players: firebase.firestore.FieldValue.arrayUnion(waitingList[0]),
-        });
-      }
-    });
-    setSecondChance(false)
-        //sent E-Mail
   }
 
   const fetchCommGames = () => (event) => {
@@ -136,7 +118,7 @@ function FetchCommGame() {
             msg = "You are participating in ";
           }
           }
-console.log(msg);
+          console.log(msg);
           var game = snapshot.data();
           var comname = game.Community.Name;
           var location = game.Location;
@@ -197,15 +179,19 @@ console.log(msg);
 
   const gameMembers = (gameId) => (event) => {
     event.preventDefault();
-    clearList(event);
 
+  if( players.length > 0 )
+  {
+    setPlayers([]);
+  }
+  else{
     db.collection("Games")
       .doc(gameId)
       .get()
       .then((snapshot) => {
         if (snapshot) {
           var game = snapshot.data();
-          setGamesList((allDocs) => [...allDocs, game]);
+          //setAllDocs((allDocs) => [...allDocs, game]);
           var temp = game.Players;
           temp.forEach((player) => {
             db.collection("Users")
@@ -219,7 +205,28 @@ console.log(msg);
           });
         }
       });
+    }
   };
+
+  const fetchGame = () => (event) => {
+    event.preventDefault();
+
+    setCurrentGame([]);
+    //setPlayers([]);
+    setCurrentGameID(event.target.value);
+    db.collection("Games")
+    .where('Gid', '==', event.target.value)
+    .get()
+    .then((snapshot) => {
+      if (snapshot.docs.length > 0) {
+        snapshot.docs.forEach((doc) => {
+          setCurrentGame((prev) => {
+            return [...prev, doc.data()];
+          });
+        });
+      }
+    });
+  }
 
   function clearList(e) {
     e.preventDefault();
@@ -301,13 +308,19 @@ console.log(msg);
               </>
             ))}
           <div>
-          {players.map((player) => (
-            <>
-              <option>Player Name: {player.Name}</option>
-            </>
-          ))}
           <br />
-          {gamesList&&gamesList.map((doc) => (
+          {gamesList.map((game) => (
+              <>
+              <button value={game.Gid} onClick={fetchGame()} 
+                disabled={currentGameId===game.Gid}>
+                {game.Location}
+                <br />
+                {game.Date.Day}.{game.Date.Month}.{game.Date.Year}
+                </button>
+              </>
+            ))}
+          <br />
+          {currentGame.map((doc) => (
             <>
               <option>Game Location: {doc.Location}</option>
               <option>Min Players To Play: {doc.minP}</option>
@@ -329,8 +342,14 @@ console.log(msg);
               <button onClick={async() => showInMapClicked(doc)}>Open in maps</button>
               <button>Sync</button>
               <button onClick={async () => {await getWeather(doc);}}>Weather</button>
-              <button onClick={gameMembers(doc.Gid)}>Grouping</button>
+              <button onClick={gameMembers(doc.Gid)}>Players</button>
               <br />
+            </>
+          ))}
+          <br />
+            {players.map((player) => (
+            <>
+              <option>Player Name: {player.Name}</option>
             </>
           ))}
         </div>

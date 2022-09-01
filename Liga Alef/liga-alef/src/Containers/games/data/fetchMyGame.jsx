@@ -20,6 +20,8 @@ const FetchMyGame = () => {
   const [game_ID, setGameID] = useState();
   const [tempPlayer, setTempPlayer] = useState([]);
   const [players, setPlayers] = useState([]);
+  const [currentGameId, setCurrentGameID] = useState();
+  const [currentGame, setCurrentGame] = useState([]);
 
   const [group1, setGroup1] = useState([]);
   const [group2, setGroup2] = useState([]);
@@ -52,21 +54,24 @@ const FetchMyGame = () => {
       });
   }
 
-  function fetchAll(e) {
-    e.preventDefault();
+  const fetchGame = () => (event) => {
+    event.preventDefault();
 
-    clearList(e);
+    setCurrentGame([]);
+    //setPlayers([]);
+    setCurrentGameID(event.target.value);
     db.collection("Games")
-      .get()
-      .then((snapshot) => {
-        if (snapshot.docs.length > 0) {
-          snapshot.docs.forEach((doc) => {
-            setAllDocs((prev) => {
-              return [...prev, doc.data()];
-            });
+    .where('Gid', '==', event.target.value)
+    .get()
+    .then((snapshot) => {
+      if (snapshot.docs.length > 0) {
+        snapshot.docs.forEach((doc) => {
+          setCurrentGame((prev) => {
+            return [...prev, doc.data()];
           });
-        }
-      });
+        });
+      }
+    });
   }
 
   function clearList(e) {
@@ -295,7 +300,7 @@ const FetchMyGame = () => {
       .then((snapshot) => {
         if (snapshot) {
           var game = snapshot.data();
-          setAllDocs((allDocs) => [...allDocs, game]);
+          //setAllDocs((allDocs) => [...allDocs, game]);
           var temp = game.Players;
           temp.forEach((player) => {
             db.collection("Users")
@@ -413,7 +418,19 @@ const FetchMyGame = () => {
             </>
           ))}
           {group5.length>0 ? <br /> : ''}
-          {allDocs.map((doc) => (
+          <br />
+          {allDocs.map((game) => (
+              <>
+              <button value={game.Gid} onClick={fetchGame()} 
+                disabled={currentGameId===game.Gid}>
+                {game.Location}
+                <br />
+                {game.Date.Day}.{game.Date.Month}.{game.Date.Year}
+                </button>
+              </>
+            ))}
+          <br />
+          {!(group1.length>0)&&currentGame.map((doc) => (
             <>
               <option>Game Location: {doc.Location}</option>
               <option>Min Players To Play: {doc.minP}</option>
@@ -440,7 +457,7 @@ const FetchMyGame = () => {
             </>
           ))}
           <br /><br />
-          <button onClick={clearList}>Back</button>
+          <button onClick={clearList} disabled={!(group1.length>0)}>Back</button>
 
         </div>
       </div>

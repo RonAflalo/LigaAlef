@@ -47,6 +47,33 @@ const Ranking = (props) => {
         });
       };
 
+      const selectGame = () => (event) => {
+        event.preventDefault();
+        setGame({id: event.target.value});
+        setPlayers([])
+        setShow(false);
+
+        db.collection("Games").doc(event.target.value).get().then((game)=>{
+                var voated = game.data();
+                voated = voated.Voated;
+                if(voated.find((player)=>player===getUserId())){
+                    setShow(true);
+                }
+                else{
+                setVoted((prev) => [...prev, getUserId()]);
+                var temp = game.data();
+                temp = temp.Players;
+                temp.forEach((player)=>{
+                    db.collection("Users").doc(player).get().then((user) => {
+                        setPlayers((prev)=>{
+                            return[...prev,user.data()];
+                        });
+                    });
+                });
+            }
+        });
+      }
+
     const updateGrade = (userId) => (event) => {
         getOldGrade(userId, event.target.value);
     }
@@ -153,19 +180,25 @@ const Ranking = (props) => {
                 <hr />
             </Alert>
             <div>
-                    <select value={selectedGame.id} onChange={handleSelect('id')}>
-                    <option value="">Choose Game</option>
-                    {gameLList.map(game => (
-                    <option value={game.Gid} key={game.Gid} disabled={!game.Players.find((obj)=>obj===getUserId())}>Game On {game.Date.Day}.{game.Date.Month}.{game.Date.Year} In {game.Location}</option>
-                    ))}
-                    </select>
-                </div>
+            {gameLList.map((game) => (
+              <>
+              <button value={game.Gid} onClick={selectGame()} 
+                disabled={!game.Players.find((obj)=>obj===getUserId())}>
+                {game.Location}
+                <br />
+                {game.Date.Day}.{game.Date.Month}.{game.Date.Year}
+                </button>
+              </>
+            ))}
+            </div>
             <div>
+                <tr>
                 {
                     players&&(players.map((member)=>(
                         <>
+                        <td>
                             <option key="member.Name">Name: {member.Name}</option>
-                            <option key="member.Grades.Soccer"> {parseInt(member.Grades.Soccer/member.Grades.SoccerVotes)}</option>
+                            <option key="member.Grades.Soccer">Soccer Grade: {parseInt(member.Grades.Soccer/member.Grades.SoccerVotes)}</option>
                             {(member.Grades.Basketball/member.Grades.BasketballVotes) ? <option key="member.Grades.Basketball">BasketBall Grade: {parseInt(member.Grades.Basketball/member.Grades.BasketballVotes)}</option> : ''}
                             {(member.Grades.Volyball/member.Grades.SoccerVotes) ? <option key="member.Grades.Volyball">VolyBall Grade: {parseInt(member.Grades.Volyball/member.Grades.SoccerVotes)}</option> : ''}
                             <div>
@@ -178,10 +211,12 @@ const Ranking = (props) => {
                                     <option value={5} key={5}>5</option>
                                 </select>
                             </div>
+                            </td>
                         </>
                         )
                     ))
                 }
+                </tr>
             </div>
         </>
     )

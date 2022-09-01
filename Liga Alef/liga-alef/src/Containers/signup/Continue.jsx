@@ -15,11 +15,11 @@ const Continue = () => {
       Name: getUserName(),
       Email: getUserEmail(),
       Grades: { Soccer: 2.5,
-                SoccerVotes: 0,
+                SoccerVotes: 1,
                 Basketball: 2.5,
-                BasketballVotes: 0,
+                BasketballVotes: 1,
                 Vollyball: 2.5,
-                VollyballVotes: 0},
+                VollyballVotes: 1},
       Communities: [],
       User_ID: getUserId()}
       ).then(() => {
