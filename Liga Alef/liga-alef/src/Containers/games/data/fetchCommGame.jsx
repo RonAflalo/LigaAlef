@@ -4,6 +4,7 @@ import { getUserId } from "../../../Context/AuthContext";
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
 import firebase from "firebase/compat/app";
+import "./gameProps.css"
 
 function FetchCommGame() {
   const [res, setRes] = useState([]);
@@ -322,17 +323,16 @@ function FetchCommGame() {
           <br />
           {currentGame.map((doc) => (
             <>
-              <option>Game Location: {doc.Location}</option>
-              <option>Min Players To Play: {doc.minP}</option>
-              <option>
-                Players: {doc.Players.length}/{doc.maxP}
-              </option>
+            <div class="props">
+            <div><i class="fa-solid fa-location-dot"></i><i> : {doc.Location}</i></div>
+             <div>
+             <i class="fa-solid fa-person"></i><i> : {doc.Players.length}/{doc.maxP} </i>
+                </div>
               {(doc.Waiting.length>0)&&(<option> There Are {doc.Waiting.length} on the waiting list</option>)}
-              <option>Pitch Type: {doc.Pitch}</option>
-              <option>
-                Date: {doc.Date.Day}.{doc.Date.Month}.{doc.Date.Year}
-              </option>
-              <option>Time: {doc.Time}</option>
+              <div><i class="fa-solid fa-money-bill"></i><i> : {doc.Pitch}</i> </div>
+              <div><i class="fa-regular fa-calendar-days"></i><i> : {doc.Date.Day}.{doc.Date.Month}.{doc.Date.Year}</i> </div>
+              <div><i class="fa-regular fa-clock"></i><i> : {doc.Time}</i> </div> 
+              </div>
               <button onClick={gameManage(doc.Gid)} 
                     disabled={(doc.Players.length>=doc.maxP)&&!doc.Players.find((obj)=>obj===getUserId())}>
                       {doc.Players.find((obj)=>obj===getUserId()) ? 'Cancel Check In': 'Check In'}</button>
