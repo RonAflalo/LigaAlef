@@ -2,6 +2,14 @@
     display: flex;
     flex-direction: row;
     justify-content:flex-start;
-    gap: 40px;
-    font-size:x-large;
+    gap: 60px;
+    font-size: 10px;
+}
+
+.comButton{
+    margin-left: 10px;
+}
+
+.gameButton{
+    margin-left: 10px;
 }

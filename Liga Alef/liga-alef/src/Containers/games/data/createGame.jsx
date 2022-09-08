@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import { getUserId } from "../../../Context/AuthContext";
 import firebase from 'firebase/compat/app';
 import {Autocomplete, usePlacesWidget } from 'react-google-autocomplete';
+import "./gameData.css";
 
 function Create(){
   const [errorMessage, setErrorMessage] = useState();
@@ -123,17 +124,31 @@ function Create(){
         <div>
         <h1>Game Data</h1>
         {<label>{errorMessage}</label>}
+        
         <form onSubmit={addDoc}>
-            <label>Location</label><input type='text' name='location' value={game.location} onChange={handleChange} placeholder="City" /><br />
-            <label>Pitch</label><input type='text' name='pitch' value={game.pitch} onChange={handleChange} placeholder="Grass/Sand/Hard/Inside" /><br />
-            <label>Min Players</label><input type='number' name='minP' value={game.minP} onChange={handleChange}/><br />
-            <label>Max Players</label><input type='number' name='maxP' value={game.maxP} onChange={handleChange} /><br />
-            <label>Size Of Team</label><input type='number' name='teamSize' value={game.teamSize} onChange={handleChange} /><br />
-            <label>Day</label><input type='number' name='day' value={game.day} onChange={handleChange}/><br />
-            <label>Month</label><input type='number' name='month' value={game.month} onChange={handleChange}/><br />
-            <label>Year</label><input type='number' name='year' value={game.year} onChange={handleChange} /><br />
-            <label>Time</label><input type='text' name='time' value={game.time} onChange={handleChange} placeholder="hh:mm" /><br />
+            <div className="div1">
+              <label>Location</label><input className='loc' type='text' name='location' value={game.location} onChange={handleChange} placeholder="City" />
+              <label className='pitchy'/>Pitch<input className="pit" type='text' name='pitch' value={game.pitch} onChange={handleChange} placeholder="Grass/Sand/Hard/Inside" />
+            </div><br/><hr/>
+
+            <div className="div2">
+              <label className='minplay'/>Min Players<input className="minPl" type='number' name='minP' value={game.minP} onChange={handleChange}/>
+              <label className="maxplaylabel"/>Max Players<input className='maxPl' type='number' name='maxP' value={game.maxP} onChange={handleChange} />
+            </div><br/><hr/>
+            
+            <div className="div3">
+               <label>Team's Size</label><input className="team_size" type='number' name='teamSize' value={game.teamSize} onChange={handleChange} />
+               <label className="timeofgamelabel"/>Time Of Game<input className="game_time" type='text' name='time' value={game.time} onChange={handleChange} placeholder="hh:mm" />
+            </div><br/><hr/>
+            
+            <div className="div4">
+              <label className="daylabel">Day</label><input className="dayinput" type='number' name='day' value={game.day} onChange={handleChange}/>
+              <label className="monthlabel"/>Month<input className="monthinput" type='number' name='month' value={game.month} onChange={handleChange}/>
+              <label className="yearlabel"/>Year<input className="yearinput" type='number' name='year' value={game.year} onChange={handleChange} />
+            </div><br/><hr/>
+            
             <div>
+              <br/>
                 <select value={Community.id} onChange={handleSelect("id")}>
                 <option value="" key="blank">Choose Community</option>
                 {res.map(comm => (

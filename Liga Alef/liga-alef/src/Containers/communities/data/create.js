@@ -5,7 +5,7 @@ import { getUserId, getUserName } from "../../../Context/AuthContext";
 import firebase from "firebase/compat/app";
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
-
+import "../communities.css";
 function Create() {
   const [errorMessage, setErrorMessage] = useState();
   const [comm, setComm] = useState({ name: "", type: "", maxmember: "" });
@@ -23,10 +23,9 @@ function Create() {
   const addDocument = (event) => {
     event.preventDefault();
 
-    setErrorMessage('');
-    validateData()
-    if(errorMessage==='')
-    {
+    setErrorMessage("");
+    validateData();
+    if (errorMessage === "") {
       var ref = db.collection("Community").doc();
       ref
         .set({
@@ -50,28 +49,35 @@ function Create() {
           var data = {
             message: "You are now the admin of " + comm.name + ".",
             time: Date.now(),
-          }        
-          db.collection("Users").doc(getUserId()).collection("Notifications").add({data});
-          
+          };
+          db.collection("Users")
+            .doc(getUserId())
+            .collection("Notifications")
+            .add({ data });
+
           setShow(true);
           setComm({ name: "", type: "", maxmember: "" });
         })
         .catch((err) => {
           console.log("Error " + err.message);
         });
-      }
+    }
   };
 
-  function validateData()
-  {
-    if(comm.name.length<3)
-    { setErrorMessage('Community Name Is Too Short');}
-    else if(comm.type!='Soccer'&&comm.type!='Basketball'&&comm.type!='Volyball')
-    { setErrorMessage('Community Type Is Invalide');}
-    else if(comm.maxmember<1)
-    { setErrorMessage('Something Wrong With Member Limitation');}
-    else
-    { setErrorMessage('');}
+  function validateData() {
+    if (comm.name.length < 3) {
+      setErrorMessage("Community Name Is Too Short");
+    } else if (
+      comm.type != "Soccer" &&
+      comm.type != "Basketball" &&
+      comm.type != "Volyball"
+    ) {
+      setErrorMessage("Community Type Is Invalide");
+    } else if (comm.maxmember < 1) {
+      setErrorMessage("Something Wrong With Member Limitation");
+    } else {
+      setErrorMessage("");
+    }
   }
 
   return (
@@ -89,7 +95,9 @@ function Create() {
         </Alert>
         {<label>{errorMessage}</label>}
         <form onSubmit={addDocument}>
+          <label className="namelabel">Community Name</label>
           <input
+            className="commName"
             type="text"
             name="name"
             value={comm.name}
@@ -97,7 +105,9 @@ function Create() {
             placeholder="Community Name"
           />
           <br />
+          <label>Community Type</label>
           <input
+            className="commType"
             type="text"
             name="type"
             value={comm.type}
@@ -105,13 +115,16 @@ function Create() {
             placeholder="Type"
           />
           <br />
+          <label>Max members</label>
           <input
+            className="commMax"
             type="number"
             name="maxmember"
             value={comm.maxmember}
             onChange={handleChange}
             placeholder="Max Member"
           />
+          <br />
           <br />
           <button>Create!</button>
         </form>

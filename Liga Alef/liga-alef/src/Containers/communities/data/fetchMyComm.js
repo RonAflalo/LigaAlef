@@ -8,16 +8,16 @@ function FetchMyComm() {
 
   useEffect(() => {
     db.collection("Users")
-    .doc(getUserId())
-    .get()
-    .then((value) => {
-      var fields = value.data();
-      fields = fields.Communities;
-      for (const i in fields) {
-        addToRes(fields[i]);
-      }
-    });
-  }, [])
+      .doc(getUserId())
+      .get()
+      .then((value) => {
+        var fields = value.data();
+        fields = fields.Communities;
+        for (const i in fields) {
+          addToRes(fields[i]);
+        }
+      });
+  }, []);
 
   function addToRes(item) {
     db.collection("Community")
@@ -33,16 +33,16 @@ function FetchMyComm() {
     <div>
       <div>
         {res.map((comm) => (
-              <>
-              <button value={comm.Name} onClick={''}>
-                <Link
+          <>
+            <button className="comm1" value={comm.Name} onClick={""}>
+              <Link
                 to="/my-comm"
                 state={{ name: comm.Name, id: comm.Community_ID }}>
                 {comm.Name}
-                </Link>
-                </button>
-              </>
-            ))}
+              </Link>
+            </button>
+          </>
+        ))}
       </div>
     </div>
   );

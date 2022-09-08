@@ -45,7 +45,7 @@ export const ChatRoom = (props) => {
       </main>
 
       <form className="chatMessage" onSubmit={sendMessage}>
-        <input
+        <input className="chatInp"
           value={formValue}
           onChange={(e) => setFormValue(e.target.value)}
           placeholder="say something nice"

@@ -72,7 +72,7 @@ main {
 }
 
 
-input {
+.chatInp {
   line-height: 1.5;
   width: 100%;
   font-size: 1.5rem;

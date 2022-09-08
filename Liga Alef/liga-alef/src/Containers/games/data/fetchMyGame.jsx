@@ -427,7 +427,7 @@ const FetchMyGame = () => {
           <br />
           {allDocs.map((game) => (
               <>
-              <button value={game.Gid} onClick={fetchGame()} 
+              <button className="heyhey" value={game.Gid} onClick={fetchGame()} 
                 disabled={currentGameId===game.Gid}>
                 {game.Location}
                 <br />

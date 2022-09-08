@@ -18,7 +18,6 @@ function FetchCommGame() {
   const [players, setPlayers] = useState([]);
   const [currentGameId, setCurrentGameID] = useState();
   const [currentGame, setCurrentGame] = useState([]);
-
   useEffect(() => {
     db.collection("Users")
       .doc(getUserId())
@@ -302,7 +301,7 @@ function FetchCommGame() {
         <h5>Choose Community:</h5>
             {res.map((comm) => (
               <>
-              <button value={comm.Community_ID} onClick={fetchCommGames()} 
+              <button className="comButton" value={comm.Community_ID} onClick={fetchCommGames()} 
                 disabled={commId===comm.Community_ID}>
                 {comm.Name}
                 </button>
@@ -312,7 +311,7 @@ function FetchCommGame() {
           <br />
           {gamesList.map((game) => (
               <>
-              <button value={game.Gid} onClick={fetchGame()} 
+              <button className= "gameButton" value={game.Gid} onClick={fetchGame()} 
                 disabled={currentGameId===game.Gid}>
                 {game.Location}
                 <br />
@@ -349,7 +348,7 @@ function FetchCommGame() {
           <br />
             {players.map((player) => (
             <>
-              <option>Player Name: {player.Name}</option>
+              <option>Player: {player.Name}</option>
             </>
           ))}
         </div>

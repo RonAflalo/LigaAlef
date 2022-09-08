@@ -33,11 +33,9 @@ function Fetch() {
     setAllDocs([]);
 
     var query = db.collection("Community");
-    if(Comm.name)
-      query = query.where('Name', '==', Comm.name);
-    if(Comm.id)
-      query = query.where('Community_ID', '==', Comm.id);
-      query = query.where('Type', '==', Comm.type);
+    if (Comm.name) query = query.where("Name", "==", Comm.name);
+    if (Comm.id) query = query.where("Community_ID", "==", Comm.id);
+    query = query.where("Type", "==", Comm.type);
     query.get().then((snapshot) => {
       if (snapshot.docs.length > 0) {
         snapshot.docs.forEach((doc) => {
@@ -47,8 +45,8 @@ function Fetch() {
         });
       }
     });
-      setComm({name: '', id: '', type: 'Soccer'});
-  };  
+    setComm({ name: "", id: "", type: "Soccer" });
+  };
 
   const fetchAll = (e) => {
     e.preventDefault();
@@ -67,20 +65,20 @@ function Fetch() {
       });
   };
 
-  const clearList = (e) =>{
+  const clearList = (e) => {
     e.preventDefault();
     setAllDocs([]);
     setComm([]);
-  }
+  };
 
   const manageCommunity = (commId) => (event) => {
     event.preventDefault();
     var msg;
     var ref = db.collection("Community").doc(commId);
-    ref.get().then((snapshot)=>{
+    ref.get().then((snapshot) => {
       var membersList = snapshot.data();
-      membersList=membersList.Members;
-      if(membersList.find((member)=>member===getUserId())){
+      membersList = membersList.Members;
+      if (membersList.find((member) => member === getUserId())) {
         setLeave(true);
         ref.update({
           Members: firebase.firestore.FieldValue.arrayRemove(getUserId()),
@@ -90,8 +88,7 @@ function Fetch() {
           Communities: firebase.firestore.FieldValue.arrayRemove(ref.id),
         });
         msg = "You have left ";
-      }
-      else{
+      } else {
         ref.update({
           Members: firebase.firestore.FieldValue.arrayUnion(getUserId()),
         });
@@ -104,28 +101,35 @@ function Fetch() {
         msg = "You have joined ";
       }
 
-      comName = db.collection("Community").doc(commId).get('Name').then((comName) => {
-        comName = comName.data();
-        console.log(comName.Name);
-        msg = msg + comName.Name;
-        console.log(comName);
-        console.log(msg);
-  
-        const data = {
-          message: msg,
-          time: Date.now(),
-        }        
-        db.collection("Users").doc(getUserId()).collection("Notifications").add({data});
-      });
+      comName = db
+        .collection("Community")
+        .doc(commId)
+        .get("Name")
+        .then((comName) => {
+          comName = comName.data();
+          console.log(comName.Name);
+          msg = msg + comName.Name;
+          console.log(comName);
+          console.log(msg);
+
+          const data = {
+            message: msg,
+            time: Date.now(),
+          };
+          db.collection("Users")
+            .doc(getUserId())
+            .collection("Notifications")
+            .add({ data });
+        });
     });
   };
 
-  function afterJoin(){
+  function afterJoin() {
     setShow(false);
     window.location.reload();
   }
 
-  function afterLeave(){
+  function afterLeave() {
     setLeave(false);
     window.location.reload();
   }
@@ -159,6 +163,7 @@ function Fetch() {
         onChange={handleChange}
         placeholder="Community Name"
       />
+      <br />
       <input
         type="text"
         name="id"
@@ -166,15 +171,21 @@ function Fetch() {
         onChange={handleChange}
         placeholder="Community ID"
       />
+      <br />
       <select value={Comm.type} onChange={handleSelect("type")}>
         <option value={"Soccer"}>Soccer</option>
         <option value={"Basketball"}>BasketBall</option>
         <option value={"Volyball"}>VolyBall</option>
       </select>
       <br />
+      <br />
       <button onClick={fetchFiltered}>Serach</button>
-      <button onClick={fetchAll}>Show All</button>
-      <button onClick={clearList}>Clear</button>
+      <button className="showall" onClick={fetchAll}>
+        Show All
+      </button>
+      <button className="clear" onClick={clearList}>
+        Clear
+      </button>
       <div>
         {allDocs.map((doc) => {
           return (
@@ -185,8 +196,13 @@ function Fetch() {
               <option>
                 Members: {doc.Members.length}/{doc.MaxMember}
               </option>
-              <button onClick={manageCommunity(doc.Community_ID)} disabled={doc.Members.length>=doc.MaxMember}>
-              {doc.Members.find((obj)=>obj===getUserId()) ? 'Leave': 'Join'}</button>
+              <button
+                onClick={manageCommunity(doc.Community_ID)}
+                disabled={doc.Members.length >= doc.MaxMember}>
+                {doc.Members.find((obj) => obj === getUserId())
+                  ? "Leave"
+                  : "Join"}
+              </button>
 
               <br />
               <br />
