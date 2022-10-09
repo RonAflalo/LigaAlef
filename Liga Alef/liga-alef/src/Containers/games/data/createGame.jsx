@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import { getUserId } from "../../../Context/AuthContext";
 import firebase from 'firebase/compat/app';
 import {Autocomplete, usePlacesWidget } from 'react-google-autocomplete';
-import "./gameData.css";
+
 
 function Create(){
   const [errorMessage, setErrorMessage] = useState();
